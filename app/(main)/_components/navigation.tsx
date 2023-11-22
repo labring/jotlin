@@ -23,8 +23,10 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import TrashBox from './trash-box'
+import { useSearch } from '@/hooks/use-search'
 
 const Navigation = () => {
+  const search = useSearch()
   const pathname = usePathname()
   const isMobile = useMediaQuery('(max-width:768px)')
   const create = useMutation(api.documents.create)
@@ -145,7 +147,7 @@ const Navigation = () => {
         {/* 用户信息+操作栏 */}
         <div>
           <UserItem />
-          <Item onClick={() => {}} label="Search" icon={Search} isSearch />
+          <Item onClick={search.onOpen} label="Search" icon={Search} isSearch />
           <Item onClick={() => {}} label="Settings" icon={Settings} />
           <Item onClick={handleCreate} label="New Page" icon={PlusCircle} />
         </div>

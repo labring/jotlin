@@ -1,4 +1,12 @@
 {
-  "cSpell.words": ["jotlin", "lucide", "sonner", "trunkio", "usehooks"],
+  "cSpell.words": [
+    "jotlin",
+    "lucide",
+    "shadcn",
+    "sonner",
+    "trunkio",
+    "usehooks",
+    "zustand"
+  ],
   "typescript.tsdk": "node_modules\\typescript\\lib"
 }
