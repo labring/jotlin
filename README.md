@@ -1,4 +1,4 @@
-## Jotlin - Notion Clone
+## Jotlin
 
 Base in a tutorial project from antonio(I admire most),and it will go further.
 
