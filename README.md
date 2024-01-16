@@ -8,6 +8,8 @@ Its a document editor and workplace,just like notion,simple and basic.
 
 ![image-20231125092157295](https://raw.githubusercontent.com/mlhiter/typora-images/master/202311250921576.png)
 
+Jotlin is an open-source version of Notion, but it incorporates the capabilities of LLM throughout the writing process. Before writing, AI automatically assists in retrieving information. During writing, it generates content. After writing is completed, it automatically generates intelligent Q&A and summaries for the article's knowledge base. Enterprises can deploy it in a private cloud environment to ensure data security and support team collaboration and permission control capabilities.
+
 ### Key Feature:
 
 - Real-time database
