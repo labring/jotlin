@@ -80,3 +80,11 @@ body,
     @apply bg-background text-foreground;
   }
 }
+
+/* editor style overrides */
+.ce-block__content {
+  max-width: 850px;
+}
+.ce-toolbar__content {
+  max-width: 850px;
+}
