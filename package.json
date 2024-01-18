@@ -32,7 +32,6 @@
     "@editorjs/nested-list": "^1.4.2",
     "@editorjs/paragraph": "^2.11.3",
     "@editorjs/quote": "^2.6.0",
-    "@editorjs/raw": "^2.5.0",
     "@editorjs/simple-image": "^1.6.0",
     "@editorjs/table": "^2.3.0",
     "@editorjs/underline": "^1.1.0",
