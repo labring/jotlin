@@ -15,6 +15,7 @@ interface EditorProps {
 }
 
 interface EditorCore {
+  _editorJS?: any
   destroy(): Promise<void>
 
   clear(): Promise<void>

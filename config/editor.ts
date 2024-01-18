@@ -1,8 +1,6 @@
 import Embed from '@editorjs/embed'
 import Table from '@editorjs/table'
-import List from '@editorjs/list'
 import Warning from '@editorjs/warning'
-import Code from '@editorjs/code'
 import LinkTool from '@editorjs/link'
 import Image from '@editorjs/image'
 import Raw from '@editorjs/raw'
@@ -14,6 +12,13 @@ import Delimiter from '@editorjs/delimiter'
 import InlineCode from '@editorjs/inline-code'
 import SimpleImage from '@editorjs/simple-image'
 import Paragraph from '@editorjs/paragraph'
+import NestedList from '@editorjs/nested-list'
+import editorjsNestedChecklist from '@calumk/editorjs-nested-checklist'
+import AttachesTool from '@editorjs/attaches'
+import editorjsCodecup from '@calumk/editorjs-codecup'
+import Underline from '@editorjs/underline'
+import Strikethrough from '@sotaproject/strikethrough'
+import Tooltip from 'editorjs-tooltip'
 
 //inject to global env
 window.Image = Image
@@ -47,11 +52,15 @@ export const wrapEditorJSTools = (uploadByFile: UploadByFile) => ({
   table: Table,
   marker: Marker,
   list: {
-    class: List,
+    class: NestedList,
     inlineToolbar: true,
+    config: {
+      defaultStyle: 'unordered',
+    },
   },
+  nestedchecklist: editorjsNestedChecklist,
   warning: Warning,
-  code: Code,
+  code: editorjsCodecup,
   linkTool: LinkTool,
   image: {
     class: Image,
@@ -70,6 +79,42 @@ export const wrapEditorJSTools = (uploadByFile: UploadByFile) => ({
   delimiter: Delimiter,
   inlineCode: InlineCode,
   simpleImage: SimpleImage,
+  attaches: {
+    class: AttachesTool,
+    config: {
+      uploader: {
+        uploadByFile,
+      },
+    },
+  },
+  underline: Underline,
+  strikethrough: Strikethrough,
+  tooltip: {
+    class: Tooltip,
+    config: {
+      location: 'left',
+      highlightColor: '#FFEFD5',
+      underline: true,
+      backgroundColor: '#154360',
+      textColor: '#FDFEFE',
+    },
+  },
+  // TODO: to support column
+  // columns: {
+  //   class: editorjsColumns,
+  //   config: {
+  //     EditorJsLibrary: editorInstance,
+  //     tools: {
+  //       header: Header,
+  //       paragraph: Paragraph,
+  //       delimiter: Delimiter,
+  //       checklist: {
+  //         class: CheckList,
+  //         inlineToolbar: true,
+  //       },
+  //     },
+  //   },
+  // },
 })
 
 export const initialData = {
