@@ -46,7 +46,15 @@ export const wrapEditorJSTools = (uploadByFile: UploadByFile) => ({
     },
   },
   raw: Raw,
-  header: Header,
+  header: {
+    class: Header,
+    shortcut: 'CMD+SHIFT+H',
+    config: {
+      placeholder: 'Enter a header',
+      levels: [1, 2, 3, 4, 5],
+      defaultLevel: 1,
+    },
+  },
   quote: Quote,
   checklist: CheckList,
   delimiter: Delimiter,

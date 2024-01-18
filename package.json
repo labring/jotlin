@@ -44,6 +44,8 @@
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "convex": "^1.5.1",
+    "editorjs-drag-drop": "^1.1.13",
+    "editorjs-undo": "^2.0.26",
     "emoji-picker-react": "^4.5.16",
     "lucide-react": "^0.292.0",
     "next": "14.0.3",
