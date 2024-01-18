@@ -1,45 +1,71 @@
 'use client'
 
-import { BlockNoteEditor, PartialBlock } from '@blocknote/core'
-import { BlockNoteView, useBlockNote } from '@blocknote/react'
-import '@blocknote/core/style.css'
-import { useTheme } from 'next-themes'
+import { createReactEditorJS } from 'react-editor-js'
+import { wrapEditorJSTools, ImageUploaderStatus } from '@/config/editor'
+import { API, BlockMutationEvent, OutputData } from '@editorjs/editorjs'
+import { useCallback, useRef } from 'react'
 import { useEdgeStore } from '@/lib/edgestore'
 
 interface EditorProps {
-  onChange: (value: string) => void
+  onSave: (value: string) => void
   initialContent?: string
   editable?: boolean
 }
 
-const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
-  const { resolvedTheme } = useTheme()
+interface EditorCore {
+  destroy(): Promise<void>
+
+  clear(): Promise<void>
+
+  save(): Promise<OutputData>
+
+  render(data: OutputData): Promise<void>
+}
+
+type Event = BlockMutationEvent | BlockMutationEvent[]
+
+const Editor = ({ onSave, initialContent, editable = true }: EditorProps) => {
+  const ReactEditorJS = createReactEditorJS()
+  const editorCore = useRef<EditorCore | null>(null)
   const { edgestore } = useEdgeStore()
 
   const handleUpload = async (file: File) => {
-    const response = await edgestore.publicFiles.upload({
-      file,
+    return edgestore.publicFiles.upload({ file }).then((value) => {
+      return {
+        success: ImageUploaderStatus.SUCCESS,
+        file: { url: value.url },
+      }
     })
-    return response.url
   }
 
-  const editor: BlockNoteEditor = useBlockNote({
-    editable,
-    initialContent: initialContent
-      ? (JSON.parse(initialContent) as PartialBlock[])
-      : undefined,
-    onEditorContentChange: (editor) => {
-      onChange(JSON.stringify(editor.topLevelBlocks, null, 2))
-    },
-    uploadFile: handleUpload,
-  })
+  const editorJSTools = wrapEditorJSTools(handleUpload)
+
+  const handleInitialize = useCallback((instance: EditorCore) => {
+    if (editorCore.current === null) {
+      editorCore.current = instance
+    }
+  }, [])
+
+  const onChange = async (api: API, event: Event) => {
+    if (editorCore.current !== null) {
+      const savedData = await editorCore.current.save()
+      console.log(savedData)
+
+      onSave(JSON.stringify(savedData))
+    }
+  }
+
   return (
-    <div>
-      <BlockNoteView
-        editor={editor}
-        theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
-      />
-    </div>
+    <ReactEditorJS
+      onInitialize={handleInitialize}
+      tools={editorJSTools}
+      defaultValue={JSON.parse(initialContent ?? '{}')}
+      onChange={onChange}
+      readOnly={!editable}
+      holder={'editorjs'}
+      placeholder={'Let`s write something here!'}
+      autofocus={true}
+    />
   )
 }
 

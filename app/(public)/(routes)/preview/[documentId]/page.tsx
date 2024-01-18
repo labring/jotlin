@@ -25,7 +25,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
   })
 
   const update = useMutation(api.documents.update)
-  const onChange = (content: string) => {
+  const onSave = (content: string) => {
     update({
       id: params.documentId,
       content,
@@ -56,7 +56,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
         <Toolbar preview initialData={document} />
         <Editor
           editable={false}
-          onChange={onChange}
+          onSave={onSave}
           initialContent={document.content}
         />
       </div>
