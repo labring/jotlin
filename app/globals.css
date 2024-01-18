@@ -108,3 +108,33 @@ h5.ce-header {
 h6.ce-header {
   @apply text-base font-semibold;
 }
+
+.ce-block--drop-target .ce-block__content {
+  border-top: 3px solid #ff6ab4 !important;
+  border-bottom: 3px solid #ff6ab4 !important;
+}
+.ce-block--drop-target:last-child .ce-block__content {
+  border-top: 1px dashed #a0a0a0 !important;
+  border-bottom: 3px solid #ff6ab4 !important;
+}
+.ce-block--drop-target:first-child .ce-block__content {
+  border-top: 3px solid #ff6ab4 !important;
+  border-bottom: 1px dashed #a0a0a0 !important;
+}
+.ce-block--drop-target .ce-block__content:before {
+  top: 50%;
+  left: -20px;
+  height: 8px;
+  width: 8px;
+  border: solid #ff6ab4;
+  border-width: 2px 2px 0 0;
+}
+.ce-block--drop-target:first-child .ce-block__content:before {
+  top: 0;
+}
+.ce-block--drop-target:last-child .ce-block__content:before {
+  top: 100%;
+}
+.ce-block--drop-target .ce-block__content:after {
+  background: none;
+}

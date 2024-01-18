@@ -48,13 +48,13 @@ const Editor = ({ onSave, initialContent, editable = true }: EditorProps) => {
     }
   }, [])
 
-  const handleReady = useCallback(() => {
-    const editor = editorCore.current
+  const handleReady = () => {
+    const editor = editorCore.current?._editorJS
     const undo = new Undo({ editor })
     undo.initialize(JSON.parse(initialContent ?? '{}'))
 
     new DragDrop(editor)
-  }, [initialContent])
+  }
 
   const onChange = async (api: API, event: Event) => {
     if (editorCore.current !== null) {
@@ -67,15 +67,14 @@ const Editor = ({ onSave, initialContent, editable = true }: EditorProps) => {
 
   return (
     <ReactEditorJS
-      onReady={handleReady}
+      holder={'editorjs'}
       onInitialize={handleInitialize}
+      onReady={handleReady}
       tools={editorJSTools}
       defaultValue={JSON.parse(initialContent ?? '{}')}
       onChange={onChange}
       readOnly={!editable}
-      holder={'editorjs'}
       placeholder={'Let`s write something here!'}
-      autofocus={true}
     />
   )
 }
