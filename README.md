@@ -2,8 +2,6 @@
 
 Base in a tutorial project from antonio(I admire most),and it will go further.
 
-Its a document editor and workplace,just like notion,simple and basic.
-
 ![image-20231125092052619](https://raw.githubusercontent.com/mlhiter/typora-images/master/202311250920768.png)
 
 ![image-20231125092157295](https://raw.githubusercontent.com/mlhiter/typora-images/master/202311250921576.png)
