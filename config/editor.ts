@@ -18,7 +18,17 @@ import Paragraph from '@editorjs/paragraph'
 //inject to global env
 window.Image = Image
 
-export const editorJSTools = {
+// success-uploading status. 1 for success,0 for failed
+type UploadByFile = (
+  file: File
+) => Promise<{ success: number; file?: { url: string } }>
+
+export enum ImageUploaderStatus {
+  ERROR,
+  SUCCESS,
+}
+
+export const wrapEditorJSTools = (uploadByFile: UploadByFile) => ({
   paragraph: Paragraph,
   embed: Embed,
   table: Table,
@@ -30,9 +40,8 @@ export const editorJSTools = {
   image: {
     class: Image,
     config: {
-      endpoint: {
-        byFile: '', //for file uploader
-        byUrl: '', //for URL uploader
+      uploader: {
+        uploadByFile,
       },
     },
   },
@@ -43,7 +52,7 @@ export const editorJSTools = {
   delimiter: Delimiter,
   inlineCode: InlineCode,
   simpleImage: SimpleImage,
-}
+})
 
 export const initialData = {
   time: 1635603431943,
