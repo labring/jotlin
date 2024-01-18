@@ -88,3 +88,23 @@ body,
 .ce-toolbar__content {
   max-width: 850px;
 }
+
+/* tailwind->headings to unstyled,but editor.js uses default browser style,so i style them manually */
+h1.ce-header {
+  @apply text-3xl font-bold;
+}
+h2.ce-header {
+  @apply text-2xl font-semibold;
+}
+h3.ce-header {
+  @apply text-xl font-semibold;
+}
+h4.ce-header {
+  @apply text-lg font-semibold;
+}
+h5.ce-header {
+  @apply text-base font-semibold;
+}
+h6.ce-header {
+  @apply text-base font-semibold;
+}

@@ -30,6 +30,15 @@ export enum ImageUploaderStatus {
 
 export const wrapEditorJSTools = (uploadByFile: UploadByFile) => ({
   paragraph: Paragraph,
+  header: {
+    class: Header,
+    shortcut: 'CMD+SHIFT+H',
+    config: {
+      placeholder: 'Enter a header',
+      levels: [1, 2, 3, 4, 5],
+      defaultLevel: 1,
+    },
+  },
   embed: Embed,
   table: Table,
   marker: Marker,
@@ -46,15 +55,6 @@ export const wrapEditorJSTools = (uploadByFile: UploadByFile) => ({
     },
   },
   raw: Raw,
-  header: {
-    class: Header,
-    shortcut: 'CMD+SHIFT+H',
-    config: {
-      placeholder: 'Enter a header',
-      levels: [1, 2, 3, 4, 5],
-      defaultLevel: 1,
-    },
-  },
   quote: Quote,
   checklist: CheckList,
   delimiter: Delimiter,
