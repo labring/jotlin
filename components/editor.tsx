@@ -37,23 +37,35 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     uploadFile: handleUpload,
   })
 
-  // monitor clipboard,when last paste item is image,update block that inserter's place
+  // monitor clipboard,when last paste item is image,update currentBlock;
+  // when last paste item is md-text,insert after currentBlock.
   useEffect(() => {
     const handlePaste = (event: ClipboardEvent) => {
-      console.log(event.clipboardData)
+      // BUG:preventDefault is in Failure state
+      // stop default paste for paste default text(for paste block)
+      // event.preventDefault()
+
       const items = event.clipboardData ? event.clipboardData.items : []
 
       const item = items[items.length - 1]
+      const currentBlock = editor.getTextCursorPosition().block
 
       if (item.kind === 'file' && item.type.match('^image/')) {
         const file = item.getAsFile() as File
-        const currentBlock = editor.getTextCursorPosition().block
 
-        handleUpload(file).then((imageUrl) => {
+        handleUpload(file).then((imageUrl: string) => {
           editor.updateBlock(currentBlock, {
             type: 'image',
             props: { url: imageUrl },
           })
+        })
+      } else if (item.kind === 'string' && item.type.match('text/plain')) {
+        item.getAsString(async (markdown) => {
+          const blocksFromMarkdown = await editor.tryParseMarkdownToBlocks(
+            markdown
+          )
+
+          editor.replaceBlocks([currentBlock], blocksFromMarkdown)
         })
       }
     }
