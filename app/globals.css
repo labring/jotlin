@@ -80,3 +80,13 @@ body,
     @apply bg-background text-foreground;
   }
 }
+
+/* override link style */
+.bn-editor a {
+  cursor: pointer;
+  color: rgb(51, 109, 244);
+}
+
+.bn-editor a:hover {
+  text-decoration: underline;
+}
