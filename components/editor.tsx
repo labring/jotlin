@@ -9,27 +9,13 @@ import '@blocknote/react/style.css'
 import { useCallback, useEffect } from 'react'
 
 interface EditorProps {
-  onSave: (value: string) => void
+  onChange: (value: string) => void
   initialContent?: string
   editable?: boolean
 }
 
-interface EditorCore {
-  _editorJS?: any
-  destroy(): Promise<void>
-
-  clear(): Promise<void>
-
-  save(): Promise<OutputData>
-
-  render(data: OutputData): Promise<void>
-}
-
-type Event = BlockMutationEvent | BlockMutationEvent[]
-
-const Editor = ({ onSave, initialContent, editable = true }: EditorProps) => {
-  const ReactEditorJS = createReactEditorJS()
-  const editorCore = useRef<EditorCore | null>(null)
+const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
+  const { resolvedTheme } = useTheme()
   const { edgestore } = useEdgeStore()
 
   const handleUpload = useCallback(
@@ -92,16 +78,12 @@ const Editor = ({ onSave, initialContent, editable = true }: EditorProps) => {
   }, [editor, handleUpload])
 
   return (
-    <ReactEditorJS
-      holder={'editorjs'}
-      onInitialize={handleInitialize}
-      onReady={handleReady}
-      tools={editorJSTools}
-      defaultValue={JSON.parse(initialContent ?? '{}')}
-      onChange={onChange}
-      readOnly={!editable}
-      placeholder={'Let`s write something here!'}
-    />
+    <div>
+      <BlockNoteView
+        editor={editor}
+        theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
+      />
+    </div>
   )
 }
 

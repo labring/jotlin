@@ -25,7 +25,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
   })
 
   const update = useMutation(api.documents.update)
-  const onSave = (content: string) => {
+  const onChange = (content: string) => {
     update({
       id: params.documentId,
       content,
@@ -54,7 +54,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
       <Cover url={document.coverImage} />
       <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
         <Toolbar initialData={document} />
-        <Editor onSave={onSave} initialContent={document.content} />
+        <Editor onChange={onChange} initialContent={document.content} />
       </div>
     </div>
   )
