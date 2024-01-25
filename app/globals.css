@@ -90,3 +90,20 @@ body,
 .bn-editor a:hover {
   text-decoration: underline;
 }
+
+/* override blokckquote style */
+.bn-editor blockquote {
+  position: relative;
+  padding-left: 20px;
+  background-color: #f7f7f7;
+}
+
+.bn-editor blockquote::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: #37352f;
+}
