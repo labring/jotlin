@@ -1,12 +1,19 @@
 'use client'
 
-import { BlockNoteEditor } from '@blocknote/core'
-import { BlockNoteView, useBlockNote } from '@blocknote/react'
+import {
+  BlockNoteView,
+  useBlockNote,
+  getDefaultReactSlashMenuItems,
+} from '@blocknote/react'
 import { useTheme } from 'next-themes'
 import { useEdgeStore } from '@/lib/edgestore'
-
-import '@blocknote/react/style.css'
 import { useCallback, useEffect } from 'react'
+import {
+  blockSchema,
+  blockSpecs,
+  insertBlockQuote,
+} from './editor-blocks/quote'
+import '@blocknote/react/style.css'
 
 interface EditorProps {
   onChange: (value: string) => void
@@ -28,8 +35,13 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     [edgestore.publicFiles]
   )
 
-  const editor: BlockNoteEditor = useBlockNote({
+  const editor = useBlockNote({
     editable,
+    blockSpecs: blockSpecs,
+    slashMenuItems: [
+      ...getDefaultReactSlashMenuItems(blockSchema),
+      insertBlockQuote,
+    ],
     initialContent: initialContent ? JSON.parse(initialContent) : undefined,
     onEditorContentChange: (editor) => {
       onChange(JSON.stringify(editor.topLevelBlocks, null, 2))
@@ -41,10 +53,6 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   // when last paste item is md-text,insert after currentBlock.
   useEffect(() => {
     const handlePaste = (event: ClipboardEvent) => {
-      // BUG:preventDefault is in Failure state
-      // stop default paste for paste default text(for paste block)
-      // event.preventDefault()
-
       const items = event.clipboardData ? event.clipboardData.items : []
 
       const item = items[items.length - 1]
