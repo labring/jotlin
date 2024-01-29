@@ -3,7 +3,7 @@ import { v } from 'convex/values'
 import { mutation, query } from './_generated/server'
 import { Doc, Id } from './_generated/dataModel'
 
-// function: archive文档极其子文档
+// function: archive文档及其子文档
 export const archive = mutation({
   args: { id: v.id('documents') },
   handler: async (ctx, args) => {
@@ -78,7 +78,7 @@ export const getSidebar = query({
   },
 })
 
-// function:创建新文档
+// function: 创建新文档
 export const create = mutation({
   args: {
     title: v.string(),
@@ -104,7 +104,7 @@ export const create = mutation({
   },
 })
 
-// function: 获得archive里的所有文档
+// function: 获得垃圾箱里的所有文档
 export const getTrash = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity()
@@ -126,7 +126,7 @@ export const getTrash = query({
   },
 })
 
-// function:
+// function: 垃圾箱里的文档恢复正常
 export const restore = mutation({
   args: { id: v.id('documents') },
   handler: async (ctx, args) => {
