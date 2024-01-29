@@ -7,6 +7,7 @@ import {
   Search,
   Settings,
   Trash,
+  Inbox,
 } from 'lucide-react'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import { ElementRef, useRef, useState, useEffect } from 'react'
@@ -156,6 +157,7 @@ const Navigation = () => {
           <UserItem />
           <Item onClick={search.onOpen} label="Search" icon={Search} isSearch />
           <Item onClick={settings.onOpen} label="Settings" icon={Settings} />
+          <Item onClick={settings.onOpen} label="Inbox" icon={Inbox} />
           <Item onClick={handleCreate} label="New Page" icon={PlusCircle} />
         </div>
         {/* 文档列表 */}
