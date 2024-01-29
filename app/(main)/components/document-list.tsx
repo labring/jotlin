@@ -1,10 +1,9 @@
 'use client'
 
 import { Doc, Id } from '@/convex/_generated/dataModel'
-import { useQueries, useQuery } from 'convex/react'
+import { useQuery } from 'convex/react'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { getSidebar } from '../../../convex/documents'
 import { api } from '@/convex/_generated/api'
 import Item from './item'
 import { cn } from '@/lib/utils'

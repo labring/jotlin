@@ -7,7 +7,9 @@ import {
 } from '@blocknote/react'
 import { useTheme } from 'next-themes'
 import { useEdgeStore } from '@/lib/edgestore'
-import { useCallback, useEffect } from 'react'
+import * as Y from 'yjs'
+import { WebrtcProvider } from 'y-webrtc'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   blockSchema,
   blockSpecs,
@@ -19,11 +21,18 @@ interface EditorProps {
   onChange: (value: string) => void
   initialContent?: string
   editable?: boolean
+  documentId?: string
 }
 
-const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
+const Editor = ({
+  onChange,
+  initialContent,
+  editable,
+  documentId,
+}: EditorProps) => {
   const { resolvedTheme } = useTheme()
   const { edgestore } = useEdgeStore()
+  const [provider, setProvider] = useState<WebrtcProvider>()
 
   const handleUpload = useCallback(
     async (file: File) => {
@@ -34,6 +43,19 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
     },
     [edgestore.publicFiles]
   )
+
+  const doc = useMemo(() => {
+    return new Y.Doc()
+  }, [])
+
+  // collaboration
+  useEffect(() => {
+    const newProvider = new WebrtcProvider(documentId as string, doc)
+    setProvider(newProvider)
+    return () => {
+      newProvider.destroy()
+    }
+  }, [documentId, doc])
 
   const editor = useBlockNote({
     editable,
@@ -47,6 +69,14 @@ const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
       onChange(JSON.stringify(editor.topLevelBlocks, null, 2))
     },
     uploadFile: handleUpload,
+    collaboration: {
+      provider,
+      fragment: doc.getXmlFragment('document-store'),
+      user: {
+        name: 'alex lee',
+        color: '#ff0000',
+      },
+    },
   })
 
   // monitor clipboard,when last paste item is image,update currentBlock;

@@ -21,6 +21,7 @@
     "unpublish",
     "Unpublishing",
     "usehooks",
+    "Webrtc",
     "zustand"
   ],
   "typescript.tsdk": "node_modules\\typescript\\lib"
