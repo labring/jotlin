@@ -71,12 +71,12 @@ const Invite = ({ documentId }: InviteProps) => {
             disabled={isSubmitting}
             onChange={(e) => setCollaboratorEmail(e.target.value)}
             placeholder="Enter collaborator email..."
-            className="flex-1 px-2 text-xs border rounded-md h-8 bg-muted truncate focus-within:ring-transparent"
+            className="h-8 flex-1 truncate rounded-md border bg-muted px-2 text-xs focus-within:ring-transparent"
           />
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="text-xs h-8"
+            className="h-8 text-xs"
             size="sm">
             Submit
           </Button>

@@ -139,15 +139,15 @@ const Navigation = () => {
       <aside
         ref={sidebarRef}
         className={cn(
-          'group/sidebar h-full bg-secondary overflow-y-auto relative flex w-60 flex-col z-[99999]',
-          isResetting && 'transition-all ease-in-out duration-300',
+          'group/sidebar relative z-[99999] flex h-full w-60 flex-col overflow-y-auto bg-secondary',
+          isResetting && 'transition-all duration-300 ease-in-out',
           isMobile && 'w-0'
         )}>
         <div
           role="button"
           onClick={collapse}
           className={cn(
-            'h-6 w-6 text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute top-3 right-2 opacity-0 group-hover/sidebar:opacity-100 transition',
+            'absolute right-2 top-3 h-6 w-6 rounded-sm text-muted-foreground opacity-0 transition hover:bg-neutral-300 group-hover/sidebar:opacity-100 dark:hover:bg-neutral-600',
             isMobile && 'opacity-100'
           )}>
           <ChevronsLeft className="h-6 w-6" />
@@ -165,11 +165,11 @@ const Navigation = () => {
           <DocumentList />
           <Item onClick={handleCreate} icon={Plus} label="Add a page" />
           <Popover>
-            <PopoverTrigger className="w-full mt-4">
+            <PopoverTrigger className="mt-4 w-full">
               <Item label="Trash" icon={Trash} />
             </PopoverTrigger>
             <PopoverContent
-              className="p-0 w-72"
+              className="w-72 p-0"
               side={isMobile ? 'bottom' : 'right'}>
               <TrashBox />
             </PopoverContent>
@@ -179,21 +179,21 @@ const Navigation = () => {
         <div
           onMouseDown={handleMouseDown}
           onClick={resetWidth}
-          className="opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute h-full w-1 bg-primary/10 right-0 top-0"
+          className="absolute right-0 top-0 h-full w-1 cursor-ew-resize bg-primary/10 opacity-0 transition group-hover/sidebar:opacity-100"
         />
       </aside>
       {/* 主栏的导航部分 */}
       <div
         ref={navbarRef}
         className={cn(
-          'absolute top-0 z-[99999] left-60 w-[calc(100%-240px)]',
-          isResetting && 'transition-all ease-in-out duration-300',
+          'absolute left-60 top-0 z-[99999] w-[calc(100%-240px)]',
+          isResetting && 'transition-all duration-300 ease-in-out',
           isMobile && 'left-0 w-full'
         )}>
         {!!params.documentId ? (
           <Navbar isCollapsed={isCollapsed} onResetWidth={resetWidth} />
         ) : (
-          <nav className="bg-transparent px-3 py-2 w-full">
+          <nav className="w-full bg-transparent px-3 py-2">
             {isCollapsed && (
               <MenuIcon
                 onClick={resetWidth}

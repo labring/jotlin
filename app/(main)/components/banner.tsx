@@ -37,20 +37,20 @@ const Banner = ({ documentId }: BannerProps) => {
     })
   }
   return (
-    <div className="w-full bg-rose-500 text-center text-sm p-2 text-white flex items-center gap-x-2 justify-center">
+    <div className="flex w-full items-center justify-center gap-x-2 bg-rose-500 p-2 text-center text-sm text-white">
       <p> This page is in the Trash.</p>
       <Button
         size="sm"
         onClick={onRestore}
         variant="outline"
-        className="border-white bg-transparent hover:bg-primary/5 text-white hover:text-white p-1 h-auto font-normal">
+        className="h-auto border-white bg-transparent p-1 font-normal text-white hover:bg-primary/5 hover:text-white">
         Restore page
       </Button>
       <ConfirmModal onConfirm={onRemove}>
         <Button
           size="sm"
           variant="outline"
-          className="border-white bg-transparent hover:bg-primary/5 text-white hover:text-white p-1 h-auto font-normal">
+          className="h-auto border-white bg-transparent p-1 font-normal text-white hover:bg-primary/5 hover:text-white">
           Delete forever
         </Button>
       </ConfirmModal>

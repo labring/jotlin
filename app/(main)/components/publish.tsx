@@ -69,7 +69,7 @@ const Publish = ({ initialData }: PublishProps) => {
         <Button size="sm" variant="ghost">
           Publish
           {initialData.isPublished && (
-            <Globe className="text-sky-500 w-4 h-4 ml-2" />
+            <Globe className="ml-2 h-4 w-4 text-sky-500" />
           )}
         </Button>
       </PopoverTrigger>
@@ -77,7 +77,7 @@ const Publish = ({ initialData }: PublishProps) => {
         {initialData.isPublished ? (
           <div className="space-y-4">
             <div className="flex items-center gap-x-2">
-              <Globe className="text-sky-500 animate-pulse h-4 w-4" />
+              <Globe className="h-4 w-4 animate-pulse text-sky-500" />
               <p className="text-xs font-medium text-sky-500">
                 This note is live on web.
               </p>
@@ -86,7 +86,7 @@ const Publish = ({ initialData }: PublishProps) => {
               <input
                 type="text"
                 value={url}
-                className="flex-1 px-2 text-xs border rounded-l-md h-8 bg-muted truncate"
+                className="h-8 flex-1 truncate rounded-l-md border bg-muted px-2 text-xs"
                 disabled
               />
               <Button
@@ -110,8 +110,8 @@ const Publish = ({ initialData }: PublishProps) => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center">
-            <Globe className="h-8 w-8 text-muted-foreground mb-2" />
-            <p className="text-sm font-medium mb-2">Publish this note</p>
+            <Globe className="mb-2 h-8 w-8 text-muted-foreground" />
+            <p className="mb-2 text-sm font-medium">Publish this note</p>
             <span className="text-xs text-muted-foreground">
               Share your work with others
             </span>

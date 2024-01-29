@@ -103,14 +103,14 @@ const Item = ({
       role="button"
       style={{ paddingLeft: level ? `${level * 12 + 12}px` : '12px' }}
       className={cn(
-        'group min-h-[27px] text-sm py-1 pr-3 w-full hover:bg-primary/5 flex items-center text-muted-foreground font-medium',
+        'group flex min-h-[27px] w-full items-center py-1 pr-3 text-sm font-medium text-muted-foreground hover:bg-primary/5',
         active && 'bg-primary/5 text-primary'
       )}>
       {/* 展开子文档三角符 */}
       {!!id && (
         <div
           role="button"
-          className="h-full rounded-sm hover:bg-neutral-300  mr-1
+          className="mr-1 h-full rounded-sm  hover:bg-neutral-300
           dark:hover:bg-neutral-600"
           onClick={handleExpand}>
           <ChevronIcon className="h-4 w-4 shrink-0 text-muted-foreground/50" />
@@ -118,15 +118,15 @@ const Item = ({
       )}
       {/* 文档的自定义emoji Icon，如果有就渲染，没有就渲染默认的icon */}
       {documentIcon ? (
-        <div className="shrink-0 mr-2 text-[18px]">{documentIcon}</div>
+        <div className="mr-2 shrink-0 text-[18px]">{documentIcon}</div>
       ) : (
-        <Icon className="shrink-0 h-[18px] w-[18px] mr-2 text-muted-foreground" />
+        <Icon className="mr-2 h-[18px] w-[18px] shrink-0 text-muted-foreground" />
       )}
       {/* 文档名字 */}
       <span className="truncate">{label}</span>
       {/* 当是搜索时呈现 */}
       {isSearch && (
-        <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+        <kbd className="pointer-events-none ml-auto inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
           <span className="text-xs">Control</span>K
         </kbd>
       )}
@@ -138,7 +138,7 @@ const Item = ({
             <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
               <div
                 role="button"
-                className="opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600">
+                className="ml-auto h-full rounded-sm opacity-0 hover:bg-neutral-300 group-hover:opacity-100 dark:hover:bg-neutral-600">
                 <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
               </div>
             </DropdownMenuTrigger>
@@ -148,11 +148,11 @@ const Item = ({
               side="right"
               forceMount>
               <DropdownMenuItem onClick={onArchive}>
-                <Trash className="h-4 w-4 mr-2" />
+                <Trash className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <div className="text-xs text-muted-foreground p-2">
+              <div className="p-2 text-xs text-muted-foreground">
                 Last edited by:{user?.fullName}
               </div>
             </DropdownMenuContent>
@@ -160,7 +160,7 @@ const Item = ({
           <div
             role="button"
             onClick={onCreate}
-            className="opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600">
+            className="ml-auto h-full rounded-sm opacity-0 hover:bg-neutral-300 group-hover:opacity-100 dark:hover:bg-neutral-600">
             <Plus className="h-4 w-4 text-muted-foreground" />
           </div>
         </div>
