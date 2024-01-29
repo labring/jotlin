@@ -65,6 +65,7 @@ const Item = ({
       error: 'Failed to archive note.',
     })
   }
+
   //切换展开状态
   const handleExpand = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -72,6 +73,7 @@ const Item = ({
     event.stopPropagation() //阻止事件冒泡，因为父元素上绑定点击打开文档详情的函数，不阻止会进入详情页
     onExpand?.()
   }
+
   // function: 创建文档
   const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation()
@@ -92,6 +94,7 @@ const Item = ({
       error: 'Failed to create a new note.',
     })
   }
+
   const ChevronIcon = expanded ? ChevronDown : ChevronRight
 
   return (
@@ -165,6 +168,7 @@ const Item = ({
     </div>
   )
 }
+
 Item.Skeleton = function ItemSkeleton({ level }: { level?: number }) {
   return (
     <div
