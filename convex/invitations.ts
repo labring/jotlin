@@ -59,10 +59,11 @@ export const getByEmail = query({
   },
 })
 
-// function: 更新邀请（回复邀请，答应或者拒绝）
+// function: 被邀请者更新邀请（回复邀请，同意或者拒绝），同意的话将用户id加到documents的collaborators里
 export const update = mutation({
   args: {
     id: v.id('invitations'),
+    documentId: v.id('documents'),
     isAccepted: v.boolean(),
     isReplied: v.boolean(),
   },
@@ -74,17 +75,18 @@ export const update = mutation({
     }
 
     const userEmail = identity.email
+    const userId = identity.subject
 
     const { isAccepted, isReplied } = args
 
-    const existingDocument = await ctx.db.get(args.id)
+    const existingInvitation = await ctx.db.get(args.id)
 
-    if (!existingDocument) {
+    if (!existingInvitation) {
       throw new Error('Not found')
     }
 
     // you are invited,so is collaboratorEmail
-    if (existingDocument.collaboratorEmail !== userEmail) {
+    if (existingInvitation.collaboratorEmail !== userEmail) {
       throw new Error('Unauthorized')
     }
 
@@ -93,6 +95,14 @@ export const update = mutation({
       isReplied,
     })
 
+    // update documents if isAccepted is true
+    if (isAccepted) {
+      const document = (await ctx.db.get(args.documentId)) as Doc<'documents'>
+      const updatedCollaborators = [...document.collaborators!, userId]
+      await ctx.db.patch(args.documentId, {
+        collaborators: updatedCollaborators,
+      })
+    }
     return invitation
   },
 })
