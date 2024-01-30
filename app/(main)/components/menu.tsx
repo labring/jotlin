@@ -49,11 +49,11 @@ const Menu = ({ documentId }: MenuProps) => {
         alignOffset={8}
         forceMount>
         <DropdownMenuItem onClick={onArchive}>
-          <Trash className="h-4 w-4 mr-2" />
+          <Trash className="mr-2 h-4 w-4" />
           Delete
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <div className="text-xs text-muted-foreground p-2">
+        <div className="p-2 text-xs text-muted-foreground">
           Last edited by:{user?.fullName}
         </div>
       </DropdownMenuContent>

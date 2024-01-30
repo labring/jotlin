@@ -57,7 +57,7 @@ const TrashBox = () => {
 
   if (documents === undefined) {
     return (
-      <div className="h-full flex items-center justify-center p-4">
+      <div className="flex h-full items-center justify-center p-4">
         <Spinner size="lg" />
       </div>
     )
@@ -69,12 +69,12 @@ const TrashBox = () => {
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="h-7 px-2 focus-visible:ring-transparent bg-secondary"
+          className="h-7 bg-secondary px-2 focus-visible:ring-transparent"
           placeholder="Filter by page title..."
         />
       </div>
       <div className="mt-2 px-1 pb-1">
-        <p className="hidden last:block text-xs text-center text-muted-foreground pb-2">
+        <p className="hidden pb-2 text-center text-xs text-muted-foreground last:block">
           No documents found.
         </p>
         {filteredDocuments?.map((document) => (
@@ -82,7 +82,7 @@ const TrashBox = () => {
             key={document._id}
             role="button"
             onClick={() => onClick(document._id)}
-            className="text-sm rounded-sm w-full hover:bg-primary/5 flex items-center text-primary justify-between">
+            className="flex w-full items-center justify-between rounded-sm text-sm text-primary hover:bg-primary/5">
             <span className="truncate pl-2">{document.title}</span>
             <div className="flex items-center">
               <div

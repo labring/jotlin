@@ -59,10 +59,11 @@ export const getByEmail = query({
   },
 })
 
-// function: 更新邀请（回复邀请，答应或者拒绝）
+// function: 被邀请者更新邀请（回复邀请，同意或者拒绝），同意的话将用户id加到documents的collaborators里
 export const update = mutation({
   args: {
     id: v.id('invitations'),
+    documentId: v.id('documents'),
     isAccepted: v.boolean(),
     isReplied: v.boolean(),
   },
@@ -74,17 +75,18 @@ export const update = mutation({
     }
 
     const userEmail = identity.email
+    const userId = identity.subject
 
     const { isAccepted, isReplied } = args
 
-    const existingDocument = await ctx.db.get(args.id)
+    const existingInvitation = await ctx.db.get(args.id)
 
-    if (!existingDocument) {
+    if (!existingInvitation) {
       throw new Error('Not found')
     }
 
     // you are invited,so is collaboratorEmail
-    if (existingDocument.collaboratorEmail !== userEmail) {
+    if (existingInvitation.collaboratorEmail !== userEmail) {
       throw new Error('Unauthorized')
     }
 
@@ -93,11 +95,35 @@ export const update = mutation({
       isReplied,
     })
 
+    // update documents if isAccepted is true
+    if (isAccepted) {
+      // update current documents and their children
+      const recursiveUpdate = async (documentId: Id<'documents'>) => {
+        const children = await ctx.db
+          .query('documents')
+          .withIndex('by_parent', (q) => q.eq('parentDocument', documentId))
+          .collect()
+
+        for (const child of children) {
+          await ctx.db.patch(child._id, {
+            collaborators: [...child.collaborators!, userId],
+          })
+          await recursiveUpdate(child._id)
+        }
+      }
+
+      const document = (await ctx.db.get(args.documentId)) as Doc<'documents'>
+      const updatedCollaborators = [...document.collaborators!, userId]
+      await ctx.db.patch(args.documentId, {
+        collaborators: updatedCollaborators,
+      })
+    }
     return invitation
   },
 })
 
-// function: 移除某人权限
+// function: 移除某人权限,移除某人在document里的collaborations的项，递归去除子文档的相应项，同时移除相应的invitation
+// note: 保留父文档权限（如果有的话），被移除用户无法访问子文档但是可以访问有权限的父文档
 export const remove = mutation({
   args: { collaboratorEmail: v.string(), documentId: v.id('documents') },
   handler: async (ctx, args) => {
@@ -127,6 +153,24 @@ export const remove = mutation({
 
     if (!existingInvitation) {
       throw new Error('Not found')
+    }
+
+    // remove document's collaboration
+    const recursiveRemove = async (documentId: Id<'documents'>) => {
+      const children = await ctx.db
+        .query('documents')
+        .withIndex('by_parent', (q) => q.eq('parentDocument', documentId))
+        .collect()
+
+      for (const child of children) {
+        const removedCollaborators = child.collaborators!.filter(
+          (collaborator) => collaborator !== args.collaboratorEmail
+        )
+        await ctx.db.patch(child._id, {
+          collaborators: removedCollaborators,
+        })
+        await recursiveRemove(child._id)
+      }
     }
 
     const invitation = await ctx.db.delete(existingInvitation._id)

@@ -99,9 +99,8 @@ const Editor = ({
         })
       } else if (item.kind === 'string' && item.type.match('text/plain')) {
         item.getAsString(async (markdown) => {
-          const blocksFromMarkdown = await editor.tryParseMarkdownToBlocks(
-            markdown
-          )
+          const blocksFromMarkdown =
+            await editor.tryParseMarkdownToBlocks(markdown)
 
           editor.replaceBlocks([currentBlock], blocksFromMarkdown)
         })
