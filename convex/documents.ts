@@ -259,6 +259,27 @@ export const getById = query({
   },
 })
 
+// function: 根据id获取文档基本信息：title、icon
+// 和上一个请求的区别是这个不需要权限，只返回基本信息，防止内容等信息暴露，用于inbox
+export const getBasicById = query({
+  args: { documentId: v.id('documents') },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity()
+    const document = await ctx.db.get(args.documentId)
+
+    if (!document) {
+      throw new Error('Not found')
+    }
+
+    if (!identity) {
+      throw new Error('Not authenticated')
+    }
+    const { title, icon } = document
+
+    return { title, icon }
+  },
+})
+
 export const update = mutation({
   args: {
     id: v.id('documents'),
