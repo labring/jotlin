@@ -12,10 +12,8 @@ import {
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import { ElementRef, useRef, useState, useEffect } from 'react'
 import { useMediaQuery } from 'usehooks-ts'
-import UserItem from './user-item'
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
-import Item from './item'
 import { toast } from 'sonner'
 import DocumentList from './document-list'
 import {
@@ -27,6 +25,9 @@ import TrashBox from './trash-box'
 import { useSearch } from '@/hooks/use-search'
 import { useSettings } from '@/hooks/use-settings'
 import Navbar from './navbar'
+import InboxItem from './inbox-item'
+import Item from './item'
+import UserItem from './user-item'
 
 const Navigation = () => {
   const router = useRouter()
@@ -157,13 +158,37 @@ const Navigation = () => {
           <UserItem />
           <Item onClick={search.onOpen} label="Search" icon={Search} isSearch />
           <Item onClick={settings.onOpen} label="Settings" icon={Settings} />
-          <Item onClick={settings.onOpen} label="Inbox" icon={Inbox} />
+          <Popover>
+            <PopoverTrigger className="group flex min-h-[27px] w-full items-center py-1 pl-3 pr-3 text-sm font-medium text-muted-foreground hover:bg-primary/5">
+              <Inbox className="mr-2 h-[18px] w-[18px] shrink-0 text-muted-foreground" />
+              <span className="truncate">Inbox</span>
+            </PopoverTrigger>
+            <PopoverContent
+              className="mt-4 w-80 p-4"
+              side={isMobile ? 'bottom' : 'right'}>
+              <InboxItem />
+            </PopoverContent>
+          </Popover>
           <Item onClick={handleCreate} label="New Page" icon={PlusCircle} />
         </div>
-        {/* 文档列表 */}
+        {/* 文档列表:共享和私人 */}
         <div className="mt-4">
-          <DocumentList />
+          {/* 共享 */}
+          <div className="ml-4 text-base font-medium text-muted-foreground">
+            Share
+          </div>
+          <DocumentList type="share" />
+
+          {/* 私人 */}
+          <div className="ml-4 text-base font-medium text-muted-foreground">
+            Private
+          </div>
+          <DocumentList type="private" />
+
+          {/* 创建新页面 */}
           <Item onClick={handleCreate} icon={Plus} label="Add a page" />
+
+          {/* Trash */}
           <Popover>
             <PopoverTrigger className="mt-4 w-full">
               <Item label="Trash" icon={Trash} />
