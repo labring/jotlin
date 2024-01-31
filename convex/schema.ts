@@ -14,6 +14,7 @@ export default defineSchema({
     icon: v.optional(v.string()),
   })
     .index('by_user', ['userId'])
+    .index('by_parent', ['parentDocument'])
     .index('by_user_parent', ['userId', 'parentDocument']),
 
   invitations: defineTable({

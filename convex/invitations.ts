@@ -19,10 +19,14 @@ export const create = mutation({
     // NOTE: 这里暂时认为所有用户都有email
     const userEmail = identity.email!
 
+    if (userEmail === args.collaboratorEmail) {
+      throw new Error('Cannot invite yourself')
+    }
+
     const invitation = await ctx.db.insert('invitations', {
+      documentId: args.documentId,
       userEmail,
       collaboratorEmail: args.collaboratorEmail,
-      documentId: args.documentId,
       isAccepted: false,
       isReplied: false,
     })
@@ -33,7 +37,7 @@ export const create = mutation({
 
 // function: 获取邀请信息列表
 export const getByEmail = query({
-  handler: async (ctx, args) => {
+  handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity()
 
     if (!identity) {
