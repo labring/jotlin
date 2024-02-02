@@ -14,7 +14,7 @@
   "dependencies": {
     "@blocknote/core": "^0.11.1",
     "@blocknote/react": "^0.11.1",
-    "@clerk/clerk-react": "^4.28.0",
+    "@clerk/clerk-react": "^4.30.3",
     "@edgestore/react": "^0.1.4",
     "@edgestore/server": "^0.1.4",
     "@radix-ui/react-alert-dialog": "^1.0.5",
@@ -39,6 +39,7 @@
     "react-dropzone": "^14.2.3",
     "react-textarea-autosize": "^8.5.3",
     "sonner": "^1.2.0",
+    "swr": "^2.2.4",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
     "usehooks-ts": "^2.9.1",
