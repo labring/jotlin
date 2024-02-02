@@ -13,7 +13,7 @@ Jotlin is an open-source version of Notion, but it incorporates the capabilities
 - Real-time database
 - Notion-style editor
 - Theme mode
-- Infinite chidren documents
+- Infinite children documents
 - Trash can& soft delete
 - Authentication
 - File upload,delete,replacement
@@ -29,11 +29,10 @@ Jotlin is an open-source version of Notion, but it incorporates the capabilities
 
 - React、NextJS -> Basic framework
 - Tailwind CSS->CSS framework
-- Convex ->Real-time transactional database
+- Laf ->Real-time transactional database,backend and object storage
 - Shadcn-ui->UI components library
 - BlockNote->Block-based rich text editor
-- Clerk->Authentication
-- Edgestore->File uploads in Next.js
+- NextAuth.js->Authentication
 - Emoji-picker-react->Emoji picker
 - Lucide-react->Icon sets
 - Sonner->Toast component
