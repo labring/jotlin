@@ -26,8 +26,6 @@ const Invite = ({ documentId }: InviteProps) => {
   const onInvite = (e: FormEvent) => {
     e.preventDefault()
 
-    console.log(collaboratorEmail)
-
     setIsSubmitting(true)
 
     const promise = create({ documentId, collaboratorEmail }).finally(() =>

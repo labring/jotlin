@@ -21,7 +21,9 @@ const UserItem = () => {
           className="flex w-full items-center p-3 text-sm hover:bg-primary/5">
           <div className="flex max-w-[150px] items-center gap-x-2">
             <Avatar className="h-5 w-5">
-              <AvatarImage src={user?.imageUrl}></AvatarImage>
+              <AvatarImage
+                src={user?.imageUrl}
+                alt={user?.username!}></AvatarImage>
             </Avatar>
             <span className="line-clamp-1 text-start font-medium">
               {user?.fullName}&apos;s Jotlin
