@@ -47,7 +47,7 @@ export default function RootLayout({
                 enableSystem
                 disableTransitionOnChange
                 storageKey="jotlin-theme">
-                <Toaster position="bottom-center" />
+                <Toaster position="bottom-right" />
                 <ModalProvider />
                 {children}
               </ThemeProvider>
