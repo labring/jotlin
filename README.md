@@ -32,6 +32,7 @@ Jotlin is an open-source version of Notion, but it incorporates the capabilities
 - Laf ->Real-time transactional database,backend and object storage
 - Shadcn-ui->UI components library
 - BlockNote->Block-based rich text editor
+- useSWR->Data fetching library
 - NextAuth.js->Authentication
 - Emoji-picker-react->Emoji picker
 - Lucide-react->Icon sets
