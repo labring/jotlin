@@ -99,9 +99,9 @@ const InviteItem = ({
                     onClick={accept}>
                     accept
                   </Button>
-                  <Button size="sm" variant="ghost" onClick={reject}>
+                  {/* <Button size="sm" variant="ghost" onClick={reject}>
                     reject
-                  </Button>
+                  </Button> */}
                 </div>
               ) : isReplied && isAccepted ? (
                 'Accepted'
