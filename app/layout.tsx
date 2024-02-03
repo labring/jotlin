@@ -7,7 +7,6 @@ import { ModalProvider } from '@/components/providers/modal-provider'
 import { EdgeStoreProvider } from '../lib/edgestore'
 
 import './globals.css'
-import AuthContext from '../context/AuthContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -38,22 +37,20 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <AuthContext>
-          <ConvexClientProvider>
-            <EdgeStoreProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-                storageKey="jotlin-theme">
-                <Toaster position="bottom-right" />
-                <ModalProvider />
-                {children}
-              </ThemeProvider>
-            </EdgeStoreProvider>
-          </ConvexClientProvider>
-        </AuthContext>
+        <ConvexClientProvider>
+          <EdgeStoreProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+              storageKey="jotlin-theme">
+              <Toaster position="bottom-right" />
+              <ModalProvider />
+              {children}
+            </ThemeProvider>
+          </EdgeStoreProvider>
+        </ConvexClientProvider>
       </body>
     </html>
   )
