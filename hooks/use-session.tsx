@@ -4,6 +4,7 @@ import { getUserInfo, githubLogin } from '@/api/user'
 import { useLocalStorage } from 'usehooks-ts'
 import { toast } from 'sonner'
 import { useEffect, useState } from 'react'
+import { redirect } from 'next/navigation'
 
 interface User {
   _id: string
@@ -56,10 +57,9 @@ export const useSession = () => {
   }
 
   const signOut = () => {
-    setIsLoading(true)
     setAuthentication(false)
     setToken('')
-    setIsLoading(false)
+    redirect('/')
   }
 
   return {
