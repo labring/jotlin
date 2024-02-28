@@ -3,7 +3,7 @@
 import { getUserInfo, githubLogin } from '@/api/user'
 import { useLocalStorage } from 'usehooks-ts'
 import { toast } from 'sonner'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface User {
   _id: string
@@ -14,17 +14,26 @@ interface User {
 }
 
 export const useSession = () => {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [isAuthenticated, setAuthentication] = useLocalStorage(
     'isAuthenticated',
-    false
+    false,
+    {
+      initializeWithValue: false,
+    }
   )
-  // store json default,we should let it become normal string,otherwise will add double quotation marks
+  // store json default,we should use serializer let it become normal string,otherwise will add double quotation marks
   const [token, setToken] = useLocalStorage('token', '', {
     serializer: (value) => value,
     deserializer: (value) => value,
+    initializeWithValue: false,
   })
   const [user, setUser] = useLocalStorage<User | undefined>('user', undefined)
+
+  //Keep loading until the state is determined(because useLocalStorage hook)
+  useEffect(() => {
+    setIsLoading(false)
+  }, [])
 
   const signIn = async (code: string) => {
     setIsLoading(true)
