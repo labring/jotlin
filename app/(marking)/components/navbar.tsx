@@ -5,14 +5,16 @@ import { cn } from '@/lib/utils'
 import { useScrollTop } from '@/hooks/use-scroll-top'
 import { Button } from '@/components/ui/button'
 import { ModeToggle } from '@/components/mode-toggle'
-import { SignInButton, UserButton } from '@clerk/clerk-react'
-import { useConvexAuth } from 'convex/react'
 import { Spinner } from '@/components/spinner'
 import Link from 'next/link'
+import { useAuth } from '@/stores/use-auth'
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
+import { useSession } from '@/hooks/use-session'
 
 const Navbar = () => {
-  const { isAuthenticated, isLoading } = useConvexAuth()
+  const { isAuthenticated, isLoading, user } = useSession()
   const scrolled = useScrollTop()
+  const authModal = useAuth()
   return (
     <div
       className={cn(
@@ -24,14 +26,20 @@ const Navbar = () => {
         {isLoading && <Spinner />}
         {!isAuthenticated && !isLoading && (
           <>
-            <SignInButton mode="modal">
+            {/* <SignInButton mode="modal">
               <Button variant="ghost" size="sm">
                 Log in
               </Button>
             </SignInButton>
             <SignInButton mode="modal">
               <Button size="sm">Get Jotlin free</Button>
-            </SignInButton>
+            </SignInButton> */}
+            <Button variant="ghost" size="sm" onClick={authModal.onOpen}>
+              Log in
+            </Button>
+            <Button size="sm" onClick={authModal.onOpen}>
+              Get Jotlin free
+            </Button>
           </>
         )}
         {isAuthenticated && !isLoading && (
@@ -39,7 +47,12 @@ const Navbar = () => {
             <Button variant="ghost" size="sm" asChild>
               <Link href="/documents">Enter Jotlin</Link>
             </Button>
-            <UserButton afterSignOutUrl="/" />
+            <Avatar>
+              <AvatarImage
+                src={user?.imageUrl}
+                alt={user?.username}></AvatarImage>
+            </Avatar>
+            {/* <UserButton afterSignOutUrl="/" /> */}
           </>
         )}
         <ModeToggle />

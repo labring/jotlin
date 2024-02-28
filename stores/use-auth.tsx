@@ -1,12 +1,12 @@
 import { create } from 'zustand'
 
-type SettingsStore = {
+type AuthStore = {
   isOpen: boolean
   onOpen: () => void
   onClose: () => void
 }
 
-export const useAuth = create<SettingsStore>((set) => ({
+export const useAuth = create<AuthStore>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),

@@ -2,29 +2,27 @@
 
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
-import { useConvexAuth } from 'convex/react'
 import { Spinner } from '@/components/spinner'
 import Link from 'next/link'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuth } from '@/stores/use-auth'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useSession } from '@/hooks/use-session'
 
 const Heading = () => {
-  const { isAuthenticated, isLoading } = useConvexAuth()
   const authModal = useAuth()
-  const { status, signIn } = useSession()
+  const { isAuthenticated, signIn, isLoading } = useSession()
   const searchParams = useSearchParams()
   const code = searchParams.get('code')
   const router = useRouter()
 
   // 获取code向laf发起请求
   useEffect(() => {
-    if (code && status !== 'authenticated') {
+    if (code && !isAuthenticated && !isLoading) {
       signIn(code)
       router.push('/')
     }
-  }, [code, signIn, status, router])
+  }, [code, signIn, router, isAuthenticated, isLoading])
 
   return (
     <div className="max-w-3xl space-y-4">
