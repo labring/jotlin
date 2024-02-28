@@ -4,7 +4,7 @@ import {
   DialogDescription,
   DialogHeader,
 } from '../ui/dialog'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuth } from '@/stores/use-auth'
 import AuthSocialButton from '../buttons/auth-social-button'
 import { Github } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'

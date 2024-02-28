@@ -1,7 +1,7 @@
 'use client'
 
 import { api } from '@/convex/_generated/api'
-import { useSearch } from '@/hooks/use-search'
+import { useSearch } from '@/stores/use-search'
 import { useUser } from '@clerk/clerk-react'
 import { useQuery } from 'convex/react'
 import { File } from 'lucide-react'

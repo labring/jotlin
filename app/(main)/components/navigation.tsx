@@ -22,8 +22,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import TrashBox from './trash-box'
-import { useSearch } from '@/hooks/use-search'
-import { useSettings } from '@/hooks/use-settings'
+import { useSearch } from '@/stores/use-search'
+import { useSettings } from '@/stores/use-settings'
 import Navbar from './navbar'
 import InboxItem from './inbox-item'
 import Item from './item'
