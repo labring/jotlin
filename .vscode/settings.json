@@ -25,5 +25,7 @@
     "Webrtc",
     "zustand"
   ],
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "Codegeex.SidebarUI.LanguagePreference": "中文",
+  "Codegeex.CompletionModel": "CodeGeeX Pro[Beta]"
 }

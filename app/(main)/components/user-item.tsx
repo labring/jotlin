@@ -9,10 +9,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { SignOutButton, useUser } from '@clerk/clerk-react'
+import { useSession } from '@/hooks/use-session'
+import { Button } from '@/components/ui/button'
 
 const UserItem = () => {
-  const { user } = useUser()
+  const { user, signOut } = useSession()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -26,7 +27,7 @@ const UserItem = () => {
                 alt={user?.username!}></AvatarImage>
             </Avatar>
             <span className="line-clamp-1 text-start font-medium">
-              {user?.fullName}&apos;s Jotlin
+              {user?.username}&apos;s Jotlin
             </span>
           </div>
           <ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90 text-muted-foreground" />
@@ -40,7 +41,7 @@ const UserItem = () => {
         <div className="flex flex-col space-y-4 p-2">
           {/* 邮件地址 */}
           <p className="text-xs font-medium leading-none text-muted-foreground">
-            {user?.emailAddresses[0].emailAddress}
+            {user?.emailAddress}
           </p>
           {/* 头像+空间名 */}
           <div className="flex items-center gap-x-2">
@@ -51,7 +52,7 @@ const UserItem = () => {
             </div>
             <div className="space-y-1">
               <p className="line-clamp-1 text-sm">
-                {user?.fullName}&apos;s Jotlin
+                {user?.username}&apos;s Jotlin
               </p>
             </div>
           </div>
@@ -60,7 +61,9 @@ const UserItem = () => {
         <DropdownMenuItem
           asChild
           className="w-full cursor-pointer text-muted-foreground">
-          <SignOutButton>Log out</SignOutButton>
+          <Button variant="ghost" className="outline-none" onClick={signOut}>
+            Log out
+          </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

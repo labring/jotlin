@@ -2,13 +2,28 @@
 
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
-import { useConvexAuth } from 'convex/react'
 import { Spinner } from '@/components/spinner'
 import Link from 'next/link'
-import { SignInButton } from '@clerk/clerk-react'
+import { useAuth } from '@/stores/use-auth'
+import { useSearchParams, useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { useSession } from '@/hooks/use-session'
 
 const Heading = () => {
-  const { isAuthenticated, isLoading } = useConvexAuth()
+  const authModal = useAuth()
+  const { isAuthenticated, signIn, isLoading } = useSession()
+  const searchParams = useSearchParams()
+  const code = searchParams.get('code')
+  const router = useRouter()
+
+  // 获取code向laf发起请求
+  useEffect(() => {
+    if (code && !isAuthenticated && !isLoading) {
+      signIn(code)
+      router.push('/')
+    }
+  }, [code, signIn, router, isAuthenticated, isLoading])
+
   return (
     <div className="max-w-3xl space-y-4">
       <h1 className="text-3xl font-bold sm:text-5xl md:text-6xl">
@@ -36,12 +51,10 @@ const Heading = () => {
       )}
       {/* 未登录时的显示框 */}
       {!isAuthenticated && !isLoading && (
-        <SignInButton mode="modal">
-          <Button>
-            Get Jotlin free
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </SignInButton>
+        <Button onClick={authModal.onOpen}>
+          Get Jotlin free
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
       )}
     </div>
   )

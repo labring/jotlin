@@ -5,14 +5,22 @@ import { cn } from '@/lib/utils'
 import { useScrollTop } from '@/hooks/use-scroll-top'
 import { Button } from '@/components/ui/button'
 import { ModeToggle } from '@/components/mode-toggle'
-import { SignInButton, UserButton } from '@clerk/clerk-react'
-import { useConvexAuth } from 'convex/react'
 import { Spinner } from '@/components/spinner'
 import Link from 'next/link'
+import { useAuth } from '@/stores/use-auth'
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
+import { useSession } from '@/hooks/use-session'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { ArrowRightFromLine, Settings } from 'lucide-react'
 
 const Navbar = () => {
-  const { isAuthenticated, isLoading } = useConvexAuth()
+  const { isAuthenticated, isLoading, user, signOut } = useSession()
   const scrolled = useScrollTop()
+  const authModal = useAuth()
   return (
     <div
       className={cn(
@@ -24,14 +32,12 @@ const Navbar = () => {
         {isLoading && <Spinner />}
         {!isAuthenticated && !isLoading && (
           <>
-            <SignInButton mode="modal">
-              <Button variant="ghost" size="sm">
-                Log in
-              </Button>
-            </SignInButton>
-            <SignInButton mode="modal">
-              <Button size="sm">Get Jotlin free</Button>
-            </SignInButton>
+            <Button variant="ghost" size="sm" onClick={authModal.onOpen}>
+              Log in
+            </Button>
+            <Button size="sm" onClick={authModal.onOpen}>
+              Get Jotlin free
+            </Button>
           </>
         )}
         {isAuthenticated && !isLoading && (
@@ -39,7 +45,37 @@ const Navbar = () => {
             <Button variant="ghost" size="sm" asChild>
               <Link href="/documents">Enter Jotlin</Link>
             </Button>
-            <UserButton afterSignOutUrl="/" />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Avatar>
+                  <AvatarImage src={user?.imageUrl} alt={user?.username} />
+                </Avatar>
+              </PopoverTrigger>
+              <PopoverContent className="mr-16 grid w-80 grid-cols-3 items-center gap-x-1 gap-y-4">
+                <div className="flex items-center justify-center">
+                  <Avatar>
+                    <AvatarImage src={user?.imageUrl} alt={user?.username} />
+                  </Avatar>
+                </div>
+                <div className="col-span-2 font-medium">
+                  <span>{user?.username}</span>
+                </div>
+                <div className="flex items-center justify-center ">
+                  <Settings className="h-4 w-4 text-stone-400" />
+                </div>
+                <div className="col-span-2 cursor-pointer">
+                  <span className="font-normal text-stone-500">
+                    Manage account
+                  </span>
+                </div>
+                <div className="flex items-center justify-center ">
+                  <ArrowRightFromLine className="h-4 w-4 text-stone-400" />
+                </div>
+                <div className="col-span-2 cursor-pointer" onClick={signOut}>
+                  <span className="font-normal text-stone-500">Sign out</span>
+                </div>
+              </PopoverContent>
+            </Popover>
           </>
         )}
         <ModeToggle />

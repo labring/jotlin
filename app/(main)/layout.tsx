@@ -1,13 +1,14 @@
 'use client'
 
-import { useConvexAuth } from 'convex/react'
 import { Spinner } from '../../components/spinner'
 import { redirect } from 'next/navigation'
 import Navigation from './components/navigation'
 import { SearchCommand } from '@/components/search-command'
+import { useSession } from '@/hooks/use-session'
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated, isLoading } = useConvexAuth()
+  const { isAuthenticated, isLoading } = useSession()
+
   // 加载动画
   if (isLoading) {
     return (

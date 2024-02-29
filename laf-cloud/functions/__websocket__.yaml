@@ -1,0 +1,5 @@
+name: __websocket__
+methods:
+  - GET
+  - POST
+tags: []
