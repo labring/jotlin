@@ -1,0 +1,4 @@
+name: document/remove-access
+methods:
+  - PUT
+tags: []

@@ -1,0 +1,4 @@
+name: invitation/update
+methods:
+  - PUT
+tags: []

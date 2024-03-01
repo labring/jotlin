@@ -1,0 +1,4 @@
+name: document/archive
+methods:
+  - PUT
+tags: []

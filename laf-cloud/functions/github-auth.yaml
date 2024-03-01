@@ -1,4 +1,4 @@
-name: login
+name: github-auth
 methods:
   - GET
   - POST

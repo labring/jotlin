@@ -1,0 +1,4 @@
+name: invitation/get-by-email
+methods:
+  - GET
+tags: []

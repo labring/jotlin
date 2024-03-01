@@ -1,0 +1,4 @@
+name: document/get-basic-by-id
+methods:
+  - GET
+tags: []
