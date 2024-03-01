@@ -1,0 +1,4 @@
+name: user/get-info
+methods:
+  - GET
+tags: []

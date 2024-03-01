@@ -1,0 +1,4 @@
+name: document/update
+methods:
+  - PUT
+tags: []

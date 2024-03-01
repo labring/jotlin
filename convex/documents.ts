@@ -231,7 +231,7 @@ export const getSearch = query({
   },
 })
 
-// function: 根据id获取文档名字
+// function: 根据id获取文档
 export const getById = query({
   args: { documentId: v.id('documents') },
   handler: async (ctx, args) => {

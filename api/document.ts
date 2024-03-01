@@ -12,9 +12,10 @@ interface Document {
 }
 
 // create a new document
-export const create = (document: Document) => {
+export const create = (title: string, parentDocument: string) => {
   return axios.post('/api/document/create', {
-    data: document,
+    title,
+    parentDocument,
   })
 }
 
@@ -44,8 +45,8 @@ export const remove = (id: string) => {
 }
 
 // search document
-export const getSearch = (param: string) => {
-  return axios.get(`/api/document/search?param=${param}`)
+export const getSearch = () => {
+  return axios.get(`/api/document/get-search`)
 }
 
 // get document by Id
@@ -77,7 +78,7 @@ export const removeCoverImage = (id: string) => {
 
 // remove access to this document
 export const removeAccess = (documentId: string, collaboratorEmail: string) => {
-  return axios.put('/api/document/invitation', {
+  return axios.put('/api/document/remove-access', {
     data: { documentId, collaboratorEmail },
   })
 }

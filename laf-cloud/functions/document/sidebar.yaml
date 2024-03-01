@@ -1,5 +1,4 @@
-name: register
+name: document/sidebar
 methods:
   - GET
-  - POST
 tags: []

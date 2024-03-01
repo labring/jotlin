@@ -1,0 +1,4 @@
+name: document/remove-cover-image
+methods:
+  - DELETE
+tags: []

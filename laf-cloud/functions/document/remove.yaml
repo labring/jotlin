@@ -1,0 +1,4 @@
+name: document/remove
+methods:
+  - DELETE
+tags: []

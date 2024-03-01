@@ -4,8 +4,8 @@ interface Invitation {
   documentId: string
   userEmail: string
   collaboratorEmail: string
-  isAccepted: boolean
-  isReplied: boolean
+  isAccepted?: boolean
+  isReplied?: boolean
 }
 // create a new invitation
 export const create = (invitation: Invitation) => {
@@ -16,7 +16,7 @@ export const create = (invitation: Invitation) => {
 
 // get invitation by email
 export const getByEmail = (email: string) => {
-  return axios.get(`/api/invitation/getByEmail?email=${email}`)
+  return axios.get(`/api/invitation/get-by-email?email=${email}`)
 }
 
 // update invitation

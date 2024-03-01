@@ -1,0 +1,4 @@
+name: document/restore
+methods:
+  - PUT
+tags: []

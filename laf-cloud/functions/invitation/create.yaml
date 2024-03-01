@@ -1,0 +1,5 @@
+name: invitation/create
+methods:
+  - GET
+  - POST
+tags: []
