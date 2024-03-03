@@ -1,4 +1,5 @@
 'use client'
+
 import { create } from '@/api/document'
 import { Button } from '@/components/ui/button'
 import { useSession } from '@/hooks/use-session'
@@ -11,16 +12,15 @@ const DocumentsPage = () => {
   const router = useRouter()
   const { user } = useSession()
 
-  const onCreate = () => {
-    const promise = create('untitled', '').then((documentId) =>
+  const onCreate = async () => {
+    try {
+      toast.loading('Creating a new note.....')
+      const response = await create('untitled', '')
+      const documentId = response.data.data
       router.push(`/documents/${documentId}`)
-    )
-
-    toast.promise(promise, {
-      loading: 'Creating a new note.....',
-      success: 'New note created!',
-      error: 'Failed to create a new note.',
-    })
+    } catch (error) {
+      toast.error('Failed to create a new note.')
+    }
   }
 
   return (

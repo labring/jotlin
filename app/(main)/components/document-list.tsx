@@ -1,17 +1,20 @@
 'use client'
 
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Item from './item'
 import { cn } from '@/lib/utils'
 import { FileIcon } from 'lucide-react'
-import { Doc, getSidebar } from '@/api/document'
+import { Doc } from '@/api/document'
+import axios from '@/lib/axios'
+import useSWR from 'swr'
 
 interface DocumentListProps {
   parentDocumentId?: string
   level?: number
   data?: Doc[]
 }
+
 const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
   const params = useParams()
   const router = useRouter()
@@ -25,21 +28,14 @@ const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
     }))
   }
 
-  const [documents, setDocuments] = useState<Doc[]>([])
-
   parentDocumentId = parentDocumentId ? parentDocumentId : ''
-  useEffect(() => {
-    const fetchDocument = async () => {
-      try {
-        const response = await getSidebar(parentDocumentId as string)
-        setDocuments(response.data)
-      } catch (error) {
-        console.error('Error fetching document:', error)
-      }
-    }
 
-    fetchDocument()
-  }, [parentDocumentId])
+  const fetcher = (url: string) => axios.get(url).then((res) => res.data.data)
+  const { data: documents } = useSWR(
+    `/api/document/sidebar?parentDocument=${parentDocumentId}`,
+    fetcher,
+    { refreshInterval: 1000 }
+  )
 
   // function: 点击重定向到文档详情页
   const onRedirect = (documentId: string) => {
@@ -74,7 +70,7 @@ const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
         )}>
         No pages inside
       </p>
-      {documents.map((document) => (
+      {documents.map((document: Doc) => (
         <div key={document._id}>
           <Item
             id={document._id}

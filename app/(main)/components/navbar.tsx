@@ -7,8 +7,7 @@ import Banner from './banner'
 import Menu from './menu'
 import Publish from './publish'
 import Invite from './invite'
-import { useEffect, useState } from 'react'
-import { getById, Doc } from '@/api/document'
+import { useDocumentById } from '@/hooks/use-document-by-id'
 
 interface NavbarProps {
   isCollapsed: boolean
@@ -17,19 +16,7 @@ interface NavbarProps {
 
 const Navbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
   const params = useParams()
-  const [document, setDocument] = useState<Doc>()
-
-  useEffect(() => {
-    const fetchDocument = async () => {
-      try {
-        const response = await getById(params.documentId as string)
-        setDocument(response.data.data)
-      } catch (error) {
-        console.error('Error fetching document:', error)
-      }
-    }
-    fetchDocument()
-  }, [params.documentId])
+  const { document } = useDocumentById(params.documentId as string)
 
   if (document === undefined) {
     return (

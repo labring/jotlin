@@ -1,11 +1,12 @@
 'use client'
 
-import { getById, update, Doc } from '@/api/document'
+import { update } from '@/api/document'
 import Cover from '@/components/cover'
 import Toolbar from '@/components/toolbar'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useDocumentById } from '@/hooks/use-document-by-id'
 import dynamic from 'next/dynamic'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 interface DocumentIdPageProps {
   params: {
@@ -18,20 +19,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     () => dynamic(() => import('@/components/editor'), { ssr: false }),
     []
   )
-  const [document, setDocument] = useState<Doc | undefined>(undefined)
-
-  useEffect(() => {
-    const fetchDocument = async () => {
-      try {
-        const response = await getById(params.documentId)
-        setDocument(response.data.data)
-      } catch (error) {
-        console.error('Error fetching document:', error)
-      }
-    }
-
-    fetchDocument()
-  }, [params.documentId])
+  const { document } = useDocumentById(params.documentId)
 
   const onChange = async (content: string) => {
     await update({

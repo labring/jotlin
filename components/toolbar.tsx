@@ -44,10 +44,12 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
     }
   }
   const onIconSelect = async (icon: string) => {
-    await update({
+    console.log('_id:' + initialData._id)
+    const response = await update({
       _id: initialData._id,
       icon,
     })
+    console.log(response)
   }
   const onRemoveIcon = async () => {
     await removeIcon(initialData._id)

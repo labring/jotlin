@@ -1,31 +1,27 @@
 'use client'
 
-import { getTrash, remove, restore, Doc } from '@/api/document'
+import { remove, restore, Doc } from '@/api/document'
 import ConfirmModal from '@/components/modals/confirm-modal'
 import { Spinner } from '@/components/spinner'
 import { Input } from '@/components/ui/input'
+import axios from '@/lib/axios'
 import { Search, Trash, Undo } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
+import useSWR from 'swr'
 
 const TrashBox = () => {
   const router = useRouter()
   const params = useParams()
-  const [documents, setDocuments] = useState<Doc[] | undefined>(undefined)
-
-  useEffect(() => {
-    const fetchDocument = async () => {
-      try {
-        const response = await getTrash()
-        setDocuments(response.data.data)
-      } catch (error) {
-        console.error('Error fetching Trash:', error)
-      }
+  const fetcher = (url: string) => axios.get(url).then((res) => res.data.data)
+  const { data: documents } = useSWR<Doc[]>(
+    '/api/document/get-trash',
+    fetcher,
+    {
+      refreshInterval: 1000,
     }
-
-    fetchDocument()
-  }, [params.documentId])
+  )
 
   const [search, setSearch] = useState('')
   const filteredDocuments = documents?.filter((document) => {

@@ -13,25 +13,18 @@ import {
   CommandItem,
   CommandList,
 } from './ui/command'
-import { getSearch, Doc } from '@/api/document'
+import { Doc } from '@/api/document'
+import axios from '@/lib/axios'
+import useSWR from 'swr'
 
 export const SearchCommand = () => {
   const { user } = useSession()
   const router = useRouter()
-  const [documents, setDocuments] = useState<Doc[] | undefined>(undefined)
 
-  useEffect(() => {
-    const fetchDocument = async () => {
-      try {
-        const response = await getSearch()
-        setDocuments(response.data.data)
-      } catch (error) {
-        console.error('Error fetching document:', error)
-      }
-    }
-
-    fetchDocument()
-  }, [])
+  const fetcher = (url: string) => axios.get(url).then((res) => res.data.data)
+  const { data: documents } = useSWR('/api/document/get-search', fetcher, {
+    refreshInterval: 1000,
+  })
 
   const [isMounted, setIsMounted] = useState(false)
 
@@ -60,6 +53,7 @@ export const SearchCommand = () => {
     router.push(`/documents/${id}`)
     onClose()
   }
+
   // 完全客户端化，阻止服务端渲染
   if (!isMounted) {
     return null
@@ -71,7 +65,7 @@ export const SearchCommand = () => {
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Documents">
-          {documents?.map((document) => (
+          {documents?.map((document: Doc) => (
             <CommandItem
               key={document._id}
               value={`${document._id}-${document.title}`}
