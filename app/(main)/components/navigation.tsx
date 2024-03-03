@@ -12,8 +12,6 @@ import {
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import { ElementRef, useRef, useState, useEffect } from 'react'
 import { useMediaQuery } from 'usehooks-ts'
-import { useMutation } from 'convex/react'
-import { api } from '@/convex/_generated/api'
 import { toast } from 'sonner'
 import DocumentList from './document-list'
 import {
@@ -27,6 +25,7 @@ import { useSettings } from '@/stores/use-settings'
 import Navbar from './navbar'
 import Item from './item'
 import UserItem from './user-item'
+import { create } from '@/api/document'
 
 const Navigation = () => {
   const router = useRouter()
@@ -35,7 +34,6 @@ const Navigation = () => {
   const pathname = usePathname()
   const params = useParams()
   const isMobile = useMediaQuery('(max-width:768px)')
-  const create = useMutation(api.documents.create)
 
   const isResizingRef = useRef(false)
   const sidebarRef = useRef<ElementRef<'aside'>>(null)
@@ -123,15 +121,16 @@ const Navigation = () => {
   }
 
   // function:创建一个新文件
-  const handleCreate = () => {
-    const promise = create({ title: 'Untitled' }).then((documentId) =>
+  const handleCreate = async () => {
+    try {
+      toast.loading('Create a new note...')
+      const response = await create('Untitled', '')
+      const documentId = response.data
       router.push(`/documents/${documentId}`)
-    )
-    toast.promise(promise, {
-      loading: 'Create a new note...',
-      success: 'New note created!',
-      error: 'Failed to create a new note',
-    })
+      toast.success('New note created!')
+    } catch (error) {
+      toast.error('Failed to create a new note')
+    }
   }
   return (
     <>

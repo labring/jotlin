@@ -2,21 +2,21 @@
 
 import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
-import { Doc, Id } from '@/convex/_generated/dataModel'
 import { useUser } from '@clerk/clerk-react'
-import { useQuery } from 'convex/react'
-import { api } from '@/convex/_generated/api'
 import { FileIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Doc, getBasicInfoById } from '@/api/document'
+import { useEffect, useState } from 'react'
 
+// TODO id to special type
 interface InviteItemProps {
-  documentId: Id<'documents'>
+  documentId: string
   userEmail: string
   collaboratorEmail: string
   isAccepted: boolean
   isReplied: boolean
 }
-type DocumentInfo = Pick<Doc<'documents'>, 'title' | 'icon'>
+type DocumentInfo = Pick<Doc, 'title' | 'icon'>
 
 const InviteItem = ({
   documentId,
@@ -26,10 +26,22 @@ const InviteItem = ({
   isReplied,
 }: InviteItemProps) => {
   const { user } = useUser()
+  const [documentInfo, setDocumentInfo] = useState<DocumentInfo | undefined>(
+    undefined
+  )
 
-  const document = useQuery(api.documents.getBasicById, {
-    documentId,
-  }) as DocumentInfo
+  useEffect(() => {
+    const fetchDocument = async () => {
+      try {
+        const response = await getBasicInfoById(documentId)
+        setDocumentInfo(response.data)
+      } catch (error) {
+        console.error('Error fetching documentInfo:', error)
+      }
+    }
+
+    fetchDocument()
+  }, [documentId])
 
   const accept = () => {}
 
@@ -55,8 +67,8 @@ const InviteItem = ({
             You invite <span className="font-light">{collaboratorEmail}</span>{' '}
             to
             <span className="ml-2">
-              {document.icon ? (
-                <span>{document.icon}</span>
+              {documentInfo?.icon ? (
+                <span>{documentInfo.icon}</span>
               ) : (
                 <FileIcon className="text-muted-foreground" />
               )}
@@ -82,8 +94,8 @@ const InviteItem = ({
             You are invited by <span className="font-light">{userEmail}</span>{' '}
             to
             <span className="ml-2">
-              {document.icon ? (
-                <span>{document.icon}</span>
+              {documentInfo?.icon ? (
+                <span>{documentInfo.icon}</span>
               ) : (
                 <FileIcon className="text-muted-foreground" />
               )}

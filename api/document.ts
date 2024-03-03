@@ -1,13 +1,15 @@
 import axios from '@/lib/axios'
 
-interface Document {
-  title: string
-  userId: string
-  isArchived: boolean
-  isPublished: boolean
+export interface Doc {
+  _id: string
+  title?: string
+  userId?: string
+  isArchived?: boolean
+  isPublished?: boolean
   collaborators?: [string]
   parentDocument?: string
   content?: string
+  icon?: string
   coverImage?: string
 }
 
@@ -60,7 +62,7 @@ export const getBasicInfoById = (id: string) => {
 }
 
 // update document content
-export const update = (document: Document) => {
+export const update = (document: Doc) => {
   return axios.put('/api/document/update', {
     data: document,
   })

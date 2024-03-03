@@ -1,54 +1,63 @@
 'use client'
 
+import { getTrash, remove, restore, Doc } from '@/api/document'
 import ConfirmModal from '@/components/modals/confirm-modal'
 import { Spinner } from '@/components/spinner'
 import { Input } from '@/components/ui/input'
-import { api } from '@/convex/_generated/api'
-import { Id } from '@/convex/_generated/dataModel'
-import { useMutation, useQuery } from 'convex/react'
 import { Search, Trash, Undo } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 const TrashBox = () => {
   const router = useRouter()
   const params = useParams()
-  const documents = useQuery(api.documents.getTrash)
-  const restore = useMutation(api.documents.restore)
-  const remove = useMutation(api.documents.remove)
+  const [documents, setDocuments] = useState<Doc[] | undefined>(undefined)
+
+  useEffect(() => {
+    const fetchDocument = async () => {
+      try {
+        const response = await getTrash()
+        setDocuments(response.data)
+      } catch (error) {
+        console.error('Error fetching Trash:', error)
+      }
+    }
+
+    fetchDocument()
+  }, [params.documentId])
 
   const [search, setSearch] = useState('')
   const filteredDocuments = documents?.filter((document) => {
-    return document.title.toLowerCase().includes(search.toLowerCase())
+    return document?.title?.toLowerCase().includes(search.toLowerCase())
   })
 
   const onClick = (documentId: string) => {
     router.push(`/documents/${documentId}`)
   }
 
-  const onRestore = (
+  const onRestore = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    documentId: Id<'documents'>
+    documentId: string
   ) => {
     event.stopPropagation()
-    const promise = restore({ id: documentId })
-
-    toast.promise(promise, {
-      loading: 'Restoring note...',
-      success: 'Note restored!',
-      error: 'Failed to restore note.',
-    })
+    try {
+      toast.loading('Restoring note...')
+      await restore(documentId)
+      toast.success('Note restored!')
+    } catch {
+      toast.error('Failed to restore note.')
+    }
   }
 
-  const onRemove = (documentId: Id<'documents'>) => {
-    const promise = remove({ id: documentId })
-
-    toast.promise(promise, {
-      loading: 'Deleting note...',
-      success: 'Note deleted!',
-      error: 'Failed to delete note.',
-    })
+  const onRemove = async (documentId: string) => {
+    try {
+      toast.loading('Deleting note...')
+      await remove(documentId)
+      toast.success('Note deleted!')
+    } catch {
+      toast.error('Failed to delete note.')
+    }
 
     if (params.documentId === documentId) {
       router.push('/documents')

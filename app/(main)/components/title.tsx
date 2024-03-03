@@ -2,24 +2,21 @@
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { api } from '@/convex/_generated/api'
-import { Doc } from '@/convex/_generated/dataModel'
-import { useMutation } from 'convex/react'
 import { useRef, useState } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Doc, update } from '@/api/document'
 
 interface TitleProps {
-  initialData: Doc<'documents'>
+  initialData: Doc
 }
 
 const Title = ({ initialData }: TitleProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
-  const update = useMutation(api.documents.update)
   const [title, setTitle] = useState(initialData.title || 'untitled')
   const [isEditing, setIsEditing] = useState(false)
 
   const enableInput = () => {
-    setTitle(initialData.title)
+    setTitle(initialData.title as string)
     setIsEditing(true)
     setTimeout(() => {
       inputRef.current?.focus()
@@ -29,10 +26,10 @@ const Title = ({ initialData }: TitleProps) => {
   const disableInput = () => {
     setIsEditing(false)
   }
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value)
-    update({
-      id: initialData._id,
+    await update({
+      _id: initialData._id,
       title: event.target.value || 'untitled',
     })
   }

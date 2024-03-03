@@ -1,59 +1,56 @@
 'use client'
 
+import { Doc, update } from '@/api/document'
 import { Button } from '@/components/ui/button'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { api } from '@/convex/_generated/api'
-import { Doc } from '@/convex/_generated/dataModel'
+
 import { useOrigin } from '@/hooks/use-origin'
-import { useMutation } from 'convex/react'
 import { Check, Copy, Globe } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
 interface PublishProps {
-  initialData: Doc<'documents'>
+  initialData: Doc
 }
 
 const Publish = ({ initialData }: PublishProps) => {
   const origin = useOrigin()
-  const update = useMutation(api.documents.update)
 
   const [copied, setCopied] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const url = `${origin}/preview/${initialData._id}`
 
-  const onPublish = () => {
+  const onPublish = async () => {
     setIsSubmitting(true)
-
-    const promise = update({
-      id: initialData._id,
-      isPublished: true,
-    }).finally(() => setIsSubmitting(false))
-
-    toast.promise(promise, {
-      loading: 'Publishing...',
-      success: 'Note published',
-      error: 'Failed to publish note.',
-    })
+    try {
+      toast.loading('Publishing...')
+      const response = await update({
+        _id: initialData._id,
+        isPublished: true,
+      }).finally(() => setIsSubmitting(false))
+      toast.success('Note published')
+    } catch (error) {
+      toast.error('Failed to publish note.')
+    }
   }
-  const onUnPublish = () => {
+
+  const onUnPublish = async () => {
     setIsSubmitting(true)
-
-    const promise = update({
-      id: initialData._id,
-      isPublished: false,
-    }).finally(() => setIsSubmitting(false))
-
-    toast.promise(promise, {
-      loading: 'Unpublishing...',
-      success: 'Note unpublished',
-      error: 'Failed to unpublish note.',
-    })
+    try {
+      toast.loading('Unpublishing...')
+      const promise = await update({
+        _id: initialData._id,
+        isPublished: false,
+      }).finally(() => setIsSubmitting(false))
+      toast.success('Note unpublished')
+    } catch (error) {
+      toast.error('Failed to unpublish note.')
+    }
   }
   const onCopy = () => {
     navigator.clipboard.writeText(url)

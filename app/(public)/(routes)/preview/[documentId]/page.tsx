@@ -1,33 +1,43 @@
 'use client'
 
+import { getById, update, Doc } from '@/api/document'
 import Cover from '@/components/cover'
 import Toolbar from '@/components/toolbar'
 import { Skeleton } from '@/components/ui/skeleton'
-import { api } from '@/convex/_generated/api'
-import { Id } from '@/convex/_generated/dataModel'
-import { useMutation, useQuery } from 'convex/react'
 import dynamic from 'next/dynamic'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface DocumentIdPageProps {
   params: {
-    documentId: Id<'documents'>
+    documentId: string
   }
 }
+
+//TODO: change Document to Doc
 
 const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
   const Editor = useMemo(
     () => dynamic(() => import('@/components/editor'), { ssr: false }),
     []
   )
-  const document = useQuery(api.documents.getById, {
-    documentId: params.documentId,
-  })
+  const [document, setDocument] = useState<Doc | undefined>(undefined)
 
-  const update = useMutation(api.documents.update)
-  const onChange = (content: string) => {
-    update({
-      id: params.documentId,
+  useEffect(() => {
+    const fetchDocument = async () => {
+      try {
+        const response = await getById(params.documentId)
+        setDocument(response.data)
+      } catch (error) {
+        console.error('Error fetching document:', error)
+      }
+    }
+
+    fetchDocument()
+  }, [params.documentId])
+
+  const onChange = async (content: string) => {
+    await update({
+      _id: params.documentId,
       content,
     })
   }

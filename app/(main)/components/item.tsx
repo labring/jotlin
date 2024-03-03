@@ -1,5 +1,6 @@
 'use client'
 
+import { archive, create } from '@/api/document'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,12 +8,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
-import { api } from '@/convex/_generated/api'
-import { Id } from '@/convex/_generated/dataModel'
 import { cn } from '@/lib/utils'
 import { useUser } from '@clerk/clerk-react'
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu'
-import { useMutation } from 'convex/react'
 import {
   ChevronDown,
   ChevronRight,
@@ -25,7 +23,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 interface ItemProps {
-  id?: Id<'documents'>
+  id?: string
   documentIcon?: string
   active?: boolean
   expanded?: boolean
@@ -50,20 +48,20 @@ const Item = ({
   icon: Icon,
 }: ItemProps) => {
   const { user } = useUser()
-  const create = useMutation(api.documents.create)
   const router = useRouter()
-  const archive = useMutation(api.documents.archive)
 
-  const onArchive = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const onArchive = async (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
     event.stopPropagation()
     if (!id) return
-    const promise = archive({ id }).then(() => router.push('/documents'))
-
-    toast.promise(promise, {
-      loading: 'Moving to trash...',
-      success: 'Note moved to trash!',
-      error: 'Failed to archive note.',
-    })
+    try {
+      toast.loading('Moving to trash...')
+      const response = await archive(id).then(() => router.push('/documents'))
+      toast.success('Note moved to trash!')
+    } catch (error) {
+      toast.error('Failed to archive note.')
+    }
   }
 
   //切换展开状态
@@ -74,25 +72,23 @@ const Item = ({
     onExpand?.()
   }
 
-  // function: 创建文档
-  const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const onCreate = async (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
     event.stopPropagation()
 
     if (!id) return
 
-    const promise = create({ title: 'Untitled', parentDocument: id }).then(
-      (documentId) => {
-        if (!expanded) {
-          onExpand?.()
-        }
-        router.push(`/documents/${documentId}`)
+    try {
+      const response = await create('Untitled', id)
+      const documentId = response.data
+      if (!expanded) {
+        onExpand?.()
       }
-    )
-    toast.promise(promise, {
-      loading: 'Creating a new note...',
-      success: 'New note created!',
-      error: 'Failed to create a new note.',
-    })
+      router.push(`/documents/${documentId}`)
+    } catch (error) {
+      toast.error('Failed to create a new note.')
+    }
   }
 
   const ChevronIcon = expanded ? ChevronDown : ChevronRight

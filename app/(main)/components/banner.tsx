@@ -1,41 +1,43 @@
 'use client'
 
+import { remove, restore } from '@/api/document'
 import ConfirmModal from '@/components/modals/confirm-modal'
 import { Button } from '@/components/ui/button'
-import { api } from '@/convex/_generated/api'
-import { Id } from '@/convex/_generated/dataModel'
-import { useMutation } from 'convex/react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 interface BannerProps {
-  documentId: Id<'documents'>
+  documentId: string
 }
 
 const Banner = ({ documentId }: BannerProps) => {
   const router = useRouter()
-  const remove = useMutation(api.documents.remove)
-  const restore = useMutation(api.documents.restore)
 
-  const onRemove = () => {
-    const promise = remove({ id: documentId })
-    toast.promise(promise, {
-      loading: 'Deleting note...',
-      success: 'Note deleted!',
-      error: 'Failed to delete note.',
-    })
-    router.push('/documents')
+  const onRemove = async () => {
+    try {
+      toast.loading('Deleting note...')
+
+      const response = await remove(documentId)
+
+      toast.success('Note deleted!')
+
+      router.push('/documents')
+    } catch (error) {
+      toast.error('Failed to delete note.')
+    }
+  }
+  const onRestore = async () => {
+    try {
+      toast.loading('Restoring note...')
+
+      const response = await restore(documentId)
+
+      toast.success('Note restored!')
+    } catch (error) {
+      toast.error('Failed to restore note.')
+    }
   }
 
-  const onRestore = () => {
-    const promise = restore({ id: documentId })
-
-    toast.promise(promise, {
-      loading: 'Restoring note...',
-      success: 'Note restored!',
-      error: 'Failed to restore note.',
-    })
-  }
   return (
     <div className="flex w-full items-center justify-center gap-x-2 bg-rose-500 p-2 text-center text-sm text-white">
       <p> This page is in the Trash.</p>

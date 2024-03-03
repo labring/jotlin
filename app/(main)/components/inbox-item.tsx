@@ -1,13 +1,27 @@
 'use client'
 
-import { useQuery } from 'convex/react'
-import { api } from '@/convex/_generated/api'
 import { Spinner } from '@/components/spinner'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import InviteItem from './invite-item'
+import { useEffect, useState } from 'react'
+import { useSession } from '@/hooks/use-session'
+import { Invitation, getByEmail } from '@/api/invitation'
 
 const InboxItem = () => {
-  const invitations = useQuery(api.invitations.getByEmail)
+  const [invitations, setInvitations] = useState<Invitation[]>([])
+  const { user } = useSession()
+  useEffect(() => {
+    const fetchDocument = async () => {
+      try {
+        const response = await getByEmail(user?.emailAddress as string)
+        setInvitations(response.data)
+      } catch (error) {
+        console.error('Error fetching document:', error)
+      }
+    }
+
+    fetchDocument()
+  }, [user?.emailAddress])
 
   if (invitations === undefined) {
     return (

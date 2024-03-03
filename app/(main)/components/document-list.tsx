@@ -1,18 +1,16 @@
 'use client'
 
-import { Doc, Id } from '@/convex/_generated/dataModel'
-import { useQuery } from 'convex/react'
 import { useParams, useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { api } from '@/convex/_generated/api'
+import { useEffect, useState } from 'react'
 import Item from './item'
 import { cn } from '@/lib/utils'
 import { FileIcon } from 'lucide-react'
+import { Doc, getSidebar } from '@/api/document'
 
 interface DocumentListProps {
-  parentDocumentId?: Id<'documents'>
+  parentDocumentId?: string
   level?: number
-  data?: Doc<'documents'>[]
+  data?: Doc[]
 }
 const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
   const params = useParams()
@@ -27,9 +25,21 @@ const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
     }))
   }
 
-  const documents = useQuery(api.documents.getSidebar, {
-    parentDocument: parentDocumentId,
-  })
+  const [documents, setDocuments] = useState<Doc[]>([])
+
+  parentDocumentId = parentDocumentId ? parentDocumentId : ''
+  useEffect(() => {
+    const fetchDocument = async () => {
+      try {
+        const response = await getSidebar(parentDocumentId as string)
+        setDocuments(response.data)
+      } catch (error) {
+        console.error('Error fetching document:', error)
+      }
+    }
+
+    fetchDocument()
+  }, [parentDocumentId])
 
   // function: 点击重定向到文档详情页
   const onRedirect = (documentId: string) => {
@@ -69,7 +79,7 @@ const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
           <Item
             id={document._id}
             onClick={() => onRedirect(document._id)}
-            label={document.title}
+            label={document.title as string}
             icon={FileIcon}
             documentIcon={document.icon}
             active={params.documentId === document._id}

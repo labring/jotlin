@@ -1,8 +1,6 @@
 'use client'
 
-import { api } from '@/convex/_generated/api'
 import { useSearch } from '@/stores/use-search'
-import { useQuery } from 'convex/react'
 import { File } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useSession } from '@/hooks/use-session'
@@ -15,11 +13,26 @@ import {
   CommandItem,
   CommandList,
 } from './ui/command'
+import { getSearch, Doc } from '@/api/document'
 
 export const SearchCommand = () => {
   const { user } = useSession()
   const router = useRouter()
-  const documents = useQuery(api.documents.getSearch)
+  const [documents, setDocuments] = useState<Doc[] | undefined>(undefined)
+
+  useEffect(() => {
+    const fetchDocument = async () => {
+      try {
+        const response = await getSearch()
+        setDocuments(response.data)
+      } catch (error) {
+        console.error('Error fetching document:', error)
+      }
+    }
+
+    fetchDocument()
+  }, [])
+
   const [isMounted, setIsMounted] = useState(false)
 
   const toggle = useSearch((store) => store.toggle)
