@@ -28,7 +28,7 @@ export const archive = (id: string) => {
 
 // get sidebar
 export const getSidebar = (parentDocument: string) => {
-  return axios.get(`/api/document/sidebar?id=${parentDocument}`)
+  return axios.get(`/api/document/sidebar?parentDocument=${parentDocument}`)
 }
 
 // get documents which are archived
@@ -63,9 +63,7 @@ export const getBasicInfoById = (id: string) => {
 
 // update document content
 export const update = (document: Doc) => {
-  return axios.put('/api/document/update', {
-    data: document,
-  })
+  return axios.put('/api/document/update', document)
 }
 
 // remove Icon
