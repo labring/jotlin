@@ -2,21 +2,21 @@
 
 import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
-import { Doc, Id } from '@/convex/_generated/dataModel'
-import { useUser } from '@clerk/clerk-react'
-import { useQuery } from 'convex/react'
-import { api } from '@/convex/_generated/api'
 import { FileIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Doc, getBasicInfoById } from '@/api/document'
+import { useEffect, useState } from 'react'
+import { useSession } from '@/hooks/use-session'
 
+// TODO id to special type
 interface InviteItemProps {
-  documentId: Id<'documents'>
+  documentId: string
   userEmail: string
   collaboratorEmail: string
   isAccepted: boolean
   isReplied: boolean
 }
-type DocumentInfo = Pick<Doc<'documents'>, 'title' | 'icon'>
+type DocumentInfo = Pick<Doc, 'title' | 'icon'>
 
 const InviteItem = ({
   documentId,
@@ -25,11 +25,23 @@ const InviteItem = ({
   isAccepted,
   isReplied,
 }: InviteItemProps) => {
-  const { user } = useUser()
+  const { user } = useSession()
+  const [documentInfo, setDocumentInfo] = useState<DocumentInfo | undefined>(
+    undefined
+  )
 
-  const document = useQuery(api.documents.getBasicById, {
-    documentId,
-  }) as DocumentInfo
+  useEffect(() => {
+    const fetchDocument = async () => {
+      try {
+        const response = await getBasicInfoById(documentId)
+        setDocumentInfo(response.data.data)
+      } catch (error) {
+        console.error('Error fetching documentInfo:', error)
+      }
+    }
+
+    fetchDocument()
+  }, [documentId])
 
   const accept = () => {}
 
@@ -44,7 +56,7 @@ const InviteItem = ({
   return (
     <>
       {/* 你是邀请人 */}
-      {userEmail === user?.primaryEmailAddress!.emailAddress && (
+      {userEmail === user?.emailAddress && (
         <div className="mt-2 flex items-start gap-x-2">
           <Avatar className="mt-2 h-7 w-7">
             <AvatarImage
@@ -55,8 +67,8 @@ const InviteItem = ({
             You invite <span className="font-light">{collaboratorEmail}</span>{' '}
             to
             <span className="ml-2">
-              {document.icon ? (
-                <span>{document.icon}</span>
+              {documentInfo?.icon ? (
+                <span>{documentInfo.icon}</span>
               ) : (
                 <FileIcon className="text-muted-foreground" />
               )}
@@ -73,7 +85,7 @@ const InviteItem = ({
         </div>
       )}
       {/* 你是被邀请人 */}
-      {collaboratorEmail === user?.primaryEmailAddress!.emailAddress && (
+      {collaboratorEmail === user?.emailAddress && (
         <div className="mt-2 flex items-start gap-x-2">
           <Avatar className="mt-2 h-7 w-7">
             <AvatarImage alt="test"></AvatarImage>
@@ -82,8 +94,8 @@ const InviteItem = ({
             You are invited by <span className="font-light">{userEmail}</span>{' '}
             to
             <span className="ml-2">
-              {document.icon ? (
-                <span>{document.icon}</span>
+              {documentInfo?.icon ? (
+                <span>{documentInfo.icon}</span>
               ) : (
                 <FileIcon className="text-muted-foreground" />
               )}

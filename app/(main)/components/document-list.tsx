@@ -1,19 +1,20 @@
 'use client'
 
-import { Doc, Id } from '@/convex/_generated/dataModel'
-import { useQuery } from 'convex/react'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { api } from '@/convex/_generated/api'
 import Item from './item'
 import { cn } from '@/lib/utils'
 import { FileIcon } from 'lucide-react'
+import { Doc } from '@/api/document'
+import axios from '@/lib/axios'
+import useSWR from 'swr'
 
 interface DocumentListProps {
-  parentDocumentId?: Id<'documents'>
+  parentDocumentId?: string
   level?: number
-  data?: Doc<'documents'>[]
+  data?: Doc[]
 }
+
 const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
   const params = useParams()
   const router = useRouter()
@@ -27,9 +28,14 @@ const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
     }))
   }
 
-  const documents = useQuery(api.documents.getSidebar, {
-    parentDocument: parentDocumentId,
-  })
+  parentDocumentId = parentDocumentId ? parentDocumentId : ''
+
+  const fetcher = (url: string) => axios.get(url).then((res) => res.data.data)
+  const { data: documents } = useSWR(
+    `/api/document/sidebar?parentDocument=${parentDocumentId}`,
+    fetcher,
+    { refreshInterval: 1000 }
+  )
 
   // function: 点击重定向到文档详情页
   const onRedirect = (documentId: string) => {
@@ -64,12 +70,12 @@ const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
         )}>
         No pages inside
       </p>
-      {documents.map((document) => (
+      {documents.map((document: Doc) => (
         <div key={document._id}>
           <Item
             id={document._id}
             onClick={() => onRedirect(document._id)}
-            label={document.title}
+            label={document.title as string}
             icon={FileIcon}
             documentIcon={document.icon}
             active={params.documentId === document._id}

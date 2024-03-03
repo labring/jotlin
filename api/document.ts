@@ -1,13 +1,15 @@
 import axios from '@/lib/axios'
 
-interface Document {
-  title: string
-  userId: string
-  isArchived: boolean
-  isPublished: boolean
+export interface Doc {
+  _id: string
+  title?: string
+  userId?: string
+  isArchived?: boolean
+  isPublished?: boolean
   collaborators?: [string]
   parentDocument?: string
   content?: string
+  icon?: string
   coverImage?: string
 }
 
@@ -26,7 +28,7 @@ export const archive = (id: string) => {
 
 // get sidebar
 export const getSidebar = (parentDocument: string) => {
-  return axios.get(`/api/document/sidebar?id=${parentDocument}`)
+  return axios.get(`/api/document/sidebar?parentDocument=${parentDocument}`)
 }
 
 // get documents which are archived
@@ -60,10 +62,8 @@ export const getBasicInfoById = (id: string) => {
 }
 
 // update document content
-export const update = (document: Document) => {
-  return axios.put('/api/document/update', {
-    data: document,
-  })
+export const update = (document: Doc) => {
+  return axios.put('/api/document/update', document)
 }
 
 // remove Icon

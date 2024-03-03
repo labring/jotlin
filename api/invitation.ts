@@ -1,14 +1,17 @@
 import axios from '@/lib/axios'
 
-interface Invitation {
+export interface Invitation {
+  _id: string
   documentId: string
   userEmail: string
   collaboratorEmail: string
-  isAccepted?: boolean
-  isReplied?: boolean
+  isAccepted: boolean
+  isReplied: boolean
 }
+
+type CreateParams = Pick<Invitation, 'documentId' | 'collaboratorEmail'>
 // create a new invitation
-export const create = (invitation: Invitation) => {
+export const create = (invitation: CreateParams) => {
   return axios.post('/api/invitation/create', {
     data: invitation,
   })

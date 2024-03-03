@@ -1,25 +1,20 @@
 'use client'
 
+import { create } from '@/api/invitation'
 import { Button } from '@/components/ui/button'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { api } from '@/convex/_generated/api'
-import { Id } from '@/convex/_generated/dataModel'
-import { useMutation } from 'convex/react'
 import { FormEvent, useState } from 'react'
 import { toast } from 'sonner'
 
 interface InviteProps {
-  documentId: Id<'documents'>
+  documentId: string
 }
 
 const Invite = ({ documentId }: InviteProps) => {
-  const create = useMutation(api.invitations.create)
-  const remove = useMutation(api.invitations.remove)
-
   const [collaboratorEmail, setCollaboratorEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -27,16 +22,15 @@ const Invite = ({ documentId }: InviteProps) => {
     e.preventDefault()
 
     setIsSubmitting(true)
-
-    const promise = create({ documentId, collaboratorEmail }).finally(() =>
-      setIsSubmitting(false)
-    )
-
-    toast.promise(promise, {
-      loading: 'Inviting...',
-      success: 'Invitation has been sent',
-      error: 'Failed to invite him.',
-    })
+    try {
+      toast.loading('Inviting...')
+      const response = create({ documentId, collaboratorEmail }).finally(() =>
+        setIsSubmitting(false)
+      )
+      toast.success('Invitation has been sent')
+    } catch (error) {
+      toast.error('Failed to invite him.')
+    }
   }
 
   const onRemovePrivilege = () => {

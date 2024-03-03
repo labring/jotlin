@@ -1,8 +1,8 @@
 'use client'
+
+import { create } from '@/api/document'
 import { Button } from '@/components/ui/button'
-import { api } from '@/convex/_generated/api'
-import { useUser } from '@clerk/clerk-react'
-import { useMutation } from 'convex/react'
+import { useSession } from '@/hooks/use-session'
 import { PlusCircle } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -10,19 +10,17 @@ import { toast } from 'sonner'
 
 const DocumentsPage = () => {
   const router = useRouter()
-  const { user } = useUser()
-  const create = useMutation(api.documents.create)
+  const { user } = useSession()
 
-  const onCreate = () => {
-    const promise = create({ title: 'untitled' }).then((documentId) =>
+  const onCreate = async () => {
+    try {
+      toast.loading('Creating a new note.....')
+      const response = await create('untitled', '')
+      const documentId = response.data.data
       router.push(`/documents/${documentId}`)
-    )
-
-    toast.promise(promise, {
-      loading: 'Creating a new note.....',
-      success: 'New note created!',
-      error: 'Failed to create a new note.',
-    })
+    } catch (error) {
+      toast.error('Failed to create a new note.')
+    }
   }
 
   return (
@@ -42,7 +40,7 @@ const DocumentsPage = () => {
         className="hidden dark:block"
       />
       <h2 className="text-lg font-medium">
-        Welcome to {user?.firstName}&apos;s Jotlin
+        Welcome to {user?.username}&apos;s Jotlin
       </h2>
       <Button onClick={onCreate}>
         <PlusCircle className="mr-2 h-4 w-4" />

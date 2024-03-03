@@ -1,17 +1,15 @@
 'use client'
 
-import { Doc } from '@/convex/_generated/dataModel'
 import IconPicker from './icon-picker'
 import { ImageIcon, Smile, X } from 'lucide-react'
 import { Button } from './ui/button'
 import { ElementRef, useRef, useState } from 'react'
-import { useMutation } from 'convex/react'
-import { api } from '@/convex/_generated/api'
 import TextareaAutosize from 'react-textarea-autosize'
 import { useCoverImage } from '@/stores/use-cover-image'
+import { Doc, removeIcon, update } from '@/api/document'
 
 interface ToolbarProps {
-  initialData: Doc<'documents'>
+  initialData: Doc
   preview?: boolean
 }
 
@@ -19,9 +17,6 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   const inputRef = useRef<ElementRef<'textarea'>>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [value, setValue] = useState(initialData.title)
-
-  const update = useMutation(api.documents.update)
-  const removeIcon = useMutation(api.documents.removeIcon)
 
   const coverImage = useCoverImage()
   const enableInput = () => {
@@ -35,10 +30,10 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   }
 
   const disableInput = () => setIsEditing(false)
-  const onInput = (value: string) => {
+  const onInput = async (value: string) => {
     setValue(value)
-    update({
-      id: initialData._id,
+    await update({
+      _id: initialData._id,
       title: value || 'Untitled',
     })
   }
@@ -48,14 +43,16 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
       disableInput()
     }
   }
-  const onIconSelect = (icon: string) => {
-    update({
-      id: initialData._id,
+  const onIconSelect = async (icon: string) => {
+    console.log('_id:' + initialData._id)
+    const response = await update({
+      _id: initialData._id,
       icon,
     })
+    console.log(response)
   }
-  const onRemoveIcon = () => {
-    removeIcon({ id: initialData._id })
+  const onRemoveIcon = async () => {
+    await removeIcon(initialData._id)
   }
   return (
     <div className="group relative pl-[54px]">

@@ -1,10 +1,6 @@
 'use client'
 
-import { Id } from '@/convex/_generated/dataModel'
-import { useUser } from '@clerk/clerk-react'
 import { useRouter } from 'next/navigation'
-import { useMutation } from 'convex/react'
-import { api } from '@/convex/_generated/api'
 import { toast } from 'sonner'
 import {
   DropdownMenu,
@@ -16,25 +12,26 @@ import {
 import { Button } from '@/components/ui/button'
 import { MoreHorizontal, Trash } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
+import { archive } from '@/api/document'
+import { useSession } from '@/hooks/use-session'
 
 interface MenuProps {
-  documentId: Id<'documents'>
+  documentId: string
 }
 
 const Menu = ({ documentId }: MenuProps) => {
   const router = useRouter()
-  const { user } = useUser()
-  const archive = useMutation(api.documents.archive)
+  const { user } = useSession()
 
-  const onArchive = () => {
-    const promise = archive({ id: documentId })
-
-    toast.promise(promise, {
-      loading: 'Moving to trash...',
-      success: 'Note moved to trash.',
-      error: 'Failed to archive note.',
-    })
-    router.push('/documents')
+  const onArchive = async () => {
+    try {
+      toast.loading('Moving to trash...')
+      const response = archive(documentId)
+      toast.success('Note moved to trash.')
+      router.push('/documents')
+    } catch (error) {
+      toast.error('Failed to archive note.')
+    }
   }
   return (
     <DropdownMenu>
@@ -54,7 +51,7 @@ const Menu = ({ documentId }: MenuProps) => {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <div className="p-2 text-xs text-muted-foreground">
-          Last edited by:{user?.fullName}
+          Last edited by:{user?.username}
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

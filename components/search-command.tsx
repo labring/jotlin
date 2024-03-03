@@ -1,8 +1,6 @@
 'use client'
 
-import { api } from '@/convex/_generated/api'
 import { useSearch } from '@/stores/use-search'
-import { useQuery } from 'convex/react'
 import { File } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useSession } from '@/hooks/use-session'
@@ -15,11 +13,19 @@ import {
   CommandItem,
   CommandList,
 } from './ui/command'
+import { Doc } from '@/api/document'
+import axios from '@/lib/axios'
+import useSWR from 'swr'
 
 export const SearchCommand = () => {
   const { user } = useSession()
   const router = useRouter()
-  const documents = useQuery(api.documents.getSearch)
+
+  const fetcher = (url: string) => axios.get(url).then((res) => res.data.data)
+  const { data: documents } = useSWR('/api/document/get-search', fetcher, {
+    refreshInterval: 1000,
+  })
+
   const [isMounted, setIsMounted] = useState(false)
 
   const toggle = useSearch((store) => store.toggle)
@@ -47,6 +53,7 @@ export const SearchCommand = () => {
     router.push(`/documents/${id}`)
     onClose()
   }
+
   // 完全客户端化，阻止服务端渲染
   if (!isMounted) {
     return null
@@ -58,7 +65,7 @@ export const SearchCommand = () => {
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Documents">
-          {documents?.map((document) => (
+          {documents?.map((document: Doc) => (
             <CommandItem
               key={document._id}
               value={`${document._id}-${document.title}`}

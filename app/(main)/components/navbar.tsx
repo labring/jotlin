@@ -1,15 +1,13 @@
 'use client'
 
 import { useParams } from 'next/navigation'
-import { useQuery } from 'convex/react'
-import { api } from '@/convex/_generated/api'
-import { Id } from '@/convex/_generated/dataModel'
 import { MenuIcon } from 'lucide-react'
 import Title from './title'
 import Banner from './banner'
 import Menu from './menu'
 import Publish from './publish'
 import Invite from './invite'
+import { useDocumentById } from '@/hooks/use-document-by-id'
 
 interface NavbarProps {
   isCollapsed: boolean
@@ -18,9 +16,7 @@ interface NavbarProps {
 
 const Navbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
   const params = useParams()
-  const document = useQuery(api.documents.getById, {
-    documentId: params.documentId as Id<'documents'>,
-  })
+  const { document } = useDocumentById(params.documentId as string)
 
   if (document === undefined) {
     return (

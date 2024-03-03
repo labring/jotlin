@@ -1,6 +1,6 @@
 'use client'
 
-import { Spinner } from '../../components/spinner'
+import { Spinner } from '@/components/spinner'
 import { redirect } from 'next/navigation'
 import Navigation from './components/navigation'
 import { SearchCommand } from '@/components/search-command'

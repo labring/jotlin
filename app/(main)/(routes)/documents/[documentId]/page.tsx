@@ -1,17 +1,16 @@
 'use client'
 
+import { update } from '@/api/document'
 import Cover from '@/components/cover'
 import Toolbar from '@/components/toolbar'
 import { Skeleton } from '@/components/ui/skeleton'
-import { api } from '@/convex/_generated/api'
-import { Id } from '@/convex/_generated/dataModel'
-import { useMutation, useQuery } from 'convex/react'
+import { useDocumentById } from '@/hooks/use-document-by-id'
 import dynamic from 'next/dynamic'
 import { useMemo } from 'react'
 
 interface DocumentIdPageProps {
   params: {
-    documentId: Id<'documents'>
+    documentId: string
   }
 }
 
@@ -20,14 +19,11 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     () => dynamic(() => import('@/components/editor'), { ssr: false }),
     []
   )
-  const document = useQuery(api.documents.getById, {
-    documentId: params.documentId,
-  })
+  const { document } = useDocumentById(params.documentId)
 
-  const update = useMutation(api.documents.update)
-  const onChange = (content: string) => {
-    update({
-      id: params.documentId,
+  const onChange = async (content: string) => {
+    await update({
+      _id: params.documentId,
       content,
     })
   }
