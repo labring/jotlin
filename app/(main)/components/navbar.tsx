@@ -23,7 +23,7 @@ const Navbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
     const fetchDocument = async () => {
       try {
         const response = await getById(params.documentId as string)
-        setDocument(response.data)
+        setDocument(response.data.data)
       } catch (error) {
         console.error('Error fetching document:', error)
       }

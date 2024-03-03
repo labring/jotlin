@@ -26,7 +26,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     const fetchDocument = async () => {
       try {
         const response = await getById(params.documentId)
-        setDocument(response.data)
+        setDocument(response.data.data)
       } catch (error) {
         console.error('Error fetching document:', error)
       }

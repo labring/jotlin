@@ -24,7 +24,7 @@ export const SearchCommand = () => {
     const fetchDocument = async () => {
       try {
         const response = await getSearch()
-        setDocuments(response.data)
+        setDocuments(response.data.data)
       } catch (error) {
         console.error('Error fetching document:', error)
       }

@@ -18,7 +18,7 @@ const TrashBox = () => {
     const fetchDocument = async () => {
       try {
         const response = await getTrash()
-        setDocuments(response.data)
+        setDocuments(response.data.data)
       } catch (error) {
         console.error('Error fetching Trash:', error)
       }
