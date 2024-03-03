@@ -1,6 +1,5 @@
 'use client'
 
-import { useUser } from '@clerk/clerk-react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import {
@@ -14,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { MoreHorizontal, Trash } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { archive } from '@/api/document'
+import { useSession } from '@/hooks/use-session'
 
 interface MenuProps {
   documentId: string
@@ -21,7 +21,7 @@ interface MenuProps {
 
 const Menu = ({ documentId }: MenuProps) => {
   const router = useRouter()
-  const { user } = useUser()
+  const { user } = useSession()
 
   const onArchive = async () => {
     try {
@@ -51,7 +51,7 @@ const Menu = ({ documentId }: MenuProps) => {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <div className="p-2 text-xs text-muted-foreground">
-          Last edited by:{user?.fullName}
+          Last edited by:{user?.username}
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

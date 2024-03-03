@@ -2,11 +2,11 @@
 
 import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
-import { useUser } from '@clerk/clerk-react'
 import { FileIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Doc, getBasicInfoById } from '@/api/document'
 import { useEffect, useState } from 'react'
+import { useSession } from '@/hooks/use-session'
 
 // TODO id to special type
 interface InviteItemProps {
@@ -25,7 +25,7 @@ const InviteItem = ({
   isAccepted,
   isReplied,
 }: InviteItemProps) => {
-  const { user } = useUser()
+  const { user } = useSession()
   const [documentInfo, setDocumentInfo] = useState<DocumentInfo | undefined>(
     undefined
   )
@@ -56,7 +56,7 @@ const InviteItem = ({
   return (
     <>
       {/* 你是邀请人 */}
-      {userEmail === user?.primaryEmailAddress!.emailAddress && (
+      {userEmail === user?.emailAddress && (
         <div className="mt-2 flex items-start gap-x-2">
           <Avatar className="mt-2 h-7 w-7">
             <AvatarImage
@@ -85,7 +85,7 @@ const InviteItem = ({
         </div>
       )}
       {/* 你是被邀请人 */}
-      {collaboratorEmail === user?.primaryEmailAddress!.emailAddress && (
+      {collaboratorEmail === user?.emailAddress && (
         <div className="mt-2 flex items-start gap-x-2">
           <Avatar className="mt-2 h-7 w-7">
             <AvatarImage alt="test"></AvatarImage>

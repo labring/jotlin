@@ -8,8 +8,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useSession } from '@/hooks/use-session'
 import { cn } from '@/lib/utils'
-import { useUser } from '@clerk/clerk-react'
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu'
 import {
   ChevronDown,
@@ -47,7 +47,7 @@ const Item = ({
   onClick,
   icon: Icon,
 }: ItemProps) => {
-  const { user } = useUser()
+  const { user } = useSession()
   const router = useRouter()
 
   const onArchive = async (
@@ -149,7 +149,7 @@ const Item = ({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <div className="p-2 text-xs text-muted-foreground">
-                Last edited by:{user?.fullName}
+                Last edited by:{user?.username}
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
