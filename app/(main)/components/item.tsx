@@ -81,7 +81,7 @@ const Item = ({
 
     try {
       const response = await create('Untitled', id)
-      const documentId = response.data.data
+      const documentId = response.data
       if (!expanded) {
         onExpand?.()
       }

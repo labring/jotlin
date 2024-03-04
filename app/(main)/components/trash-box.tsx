@@ -14,7 +14,7 @@ import useSWR from 'swr'
 const TrashBox = () => {
   const router = useRouter()
   const params = useParams()
-  const fetcher = (url: string) => axios.get(url).then((res) => res.data.data)
+  const fetcher = (url: string) => axios.get(url).then((res) => res.data)
   const { data: documents } = useSWR<Doc[]>(
     '/api/document/get-trash',
     fetcher,
