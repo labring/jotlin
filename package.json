@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "next lint",
     "prettier": "prettier --write .",
-    "convex": "npx convex dev",
     "shadcn-ui": "npx shadcn-ui@latest add"
   },
   "dependencies": {
@@ -28,7 +27,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
-    "convex": "^1.5.1",
     "emoji-picker-react": "^4.5.16",
     "lucide-react": "^0.292.0",
     "next": "14.0.3",
