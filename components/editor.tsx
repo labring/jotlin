@@ -6,7 +6,6 @@ import {
   getDefaultReactSlashMenuItems,
 } from '@blocknote/react'
 import { useTheme } from 'next-themes'
-import { useEdgeStore } from '@/lib/edgestore'
 import * as Y from 'yjs'
 import { WebrtcProvider } from 'y-webrtc'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -16,6 +15,7 @@ import {
   insertBlockQuote,
 } from './editor-blocks/quote'
 import '@blocknote/react/style.css'
+import { upload } from '@/api/image'
 
 interface EditorProps {
   onChange: (value: string) => void
@@ -31,18 +31,14 @@ const Editor = ({
   documentId,
 }: EditorProps) => {
   const { resolvedTheme } = useTheme()
-  const { edgestore } = useEdgeStore()
   const [provider, setProvider] = useState<WebrtcProvider>()
 
-  const handleUpload = useCallback(
-    async (file: File) => {
-      const response = await edgestore.publicFiles.upload({
-        file,
-      })
-      return response.url
-    },
-    [edgestore.publicFiles]
-  )
+  const handleUpload = useCallback(async (file: File) => {
+    const response = await upload({
+      file,
+    })
+    return response.data.url
+  }, [])
 
   const doc = useMemo(() => {
     return new Y.Doc()

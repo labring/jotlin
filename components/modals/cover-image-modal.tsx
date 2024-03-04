@@ -3,15 +3,14 @@
 import { useCoverImage } from '@/stores/use-cover-image'
 import { Dialog, DialogContent, DialogHeader } from '../ui/dialog'
 import { useState } from 'react'
-import { useEdgeStore } from '@/lib/edgestore'
 import { useParams } from 'next/navigation'
 import { SingleImageDropzone } from '../single-image-dropzone'
 import { update } from '@/api/document'
+import { upload } from '@/api/image'
 
 const CoverImageModal = () => {
   const params = useParams()
   const coverImage = useCoverImage()
-  const { edgestore } = useEdgeStore()
   const [file, setFile] = useState<File>()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -20,20 +19,19 @@ const CoverImageModal = () => {
     setIsSubmitting(false)
     coverImage.onClose()
   }
+
   const onChange = async (file?: File) => {
     if (file) {
       setIsSubmitting(true)
       setFile(file)
 
-      const res = await edgestore.publicFiles.upload({
+      const res = await upload({
         file,
-        options: {
-          replaceTargetUrl: coverImage.url,
-        },
+        replaceTargetUrl: coverImage.url,
       })
       await update({
         _id: params.documentId as string,
-        coverImage: res.url,
+        coverImage: res.data.data.url,
       })
     }
     onClose()

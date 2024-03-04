@@ -6,24 +6,21 @@ import { Button } from './ui/button'
 import { ImageIcon, X } from 'lucide-react'
 import { useCoverImage } from '@/stores/use-cover-image'
 import { useParams } from 'next/navigation'
-import { useEdgeStore } from '@/lib/edgestore'
 import { Skeleton } from '@/components/ui/skeleton'
 import { removeCoverImage } from '@/api/document'
+import { deleteImage } from '@/api/image'
 
 interface CoverImageProps {
   url?: string
   preview?: boolean
 }
 const Cover = ({ url, preview }: CoverImageProps) => {
-  const { edgestore } = useEdgeStore()
   const params = useParams()
   const coverImage = useCoverImage()
 
   const onRemove = async () => {
     if (url) {
-      await edgestore.publicFiles.delete({
-        url: url,
-      })
+      await deleteImage(url)
     }
     await removeCoverImage(params.documentId as string)
   }
@@ -34,7 +31,9 @@ const Cover = ({ url, preview }: CoverImageProps) => {
         !url && 'h-[12vh]',
         url && 'bg-muted'
       )}>
-      {!!url && <Image src={url} fill alt="Cover" className="object-cover" />}
+      {!!url && (
+        <Image priority src={url} fill alt="Cover" className=" object-cover" />
+      )}
       {url && !preview && (
         <div
           className="absolute bottom-5 right-5 flex
