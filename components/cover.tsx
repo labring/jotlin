@@ -31,9 +31,7 @@ const Cover = ({ url, preview }: CoverImageProps) => {
         !url && 'h-[12vh]',
         url && 'bg-muted'
       )}>
-      {!!url && (
-        <Image priority src={url} fill alt="Cover" className=" object-cover" />
-      )}
+      {!!url && <Image src={url} fill alt="Cover" className=" object-cover" />}
       {url && !preview && (
         <div
           className="absolute bottom-5 right-5 flex
