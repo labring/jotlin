@@ -3,7 +3,6 @@ import { Toaster } from 'sonner'
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import { ModalProvider } from '@/components/providers/modal-provider'
-import { EdgeStoreProvider } from '../lib/edgestore'
 
 import './globals.css'
 
@@ -36,18 +35,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <EdgeStoreProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-            storageKey="jotlin-theme">
-            <Toaster position="bottom-right" />
-            <ModalProvider />
-            {children}
-          </ThemeProvider>
-        </EdgeStoreProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+          storageKey="jotlin-theme">
+          <Toaster position="bottom-right" />
+          <ModalProvider />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )

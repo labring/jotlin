@@ -8,7 +8,7 @@ export const useDocumentById = (id: string) => {
   const { data: document } = useSWR<Doc>(
     `/api/document/get-by-id?id=${id}`,
     fetcher,
-    { refreshInterval: 1000 }
+    { refreshInterval: 500 }
   )
 
   return {
