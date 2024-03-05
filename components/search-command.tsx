@@ -21,7 +21,7 @@ export const SearchCommand = () => {
   const { user } = useSession()
   const router = useRouter()
 
-  const fetcher = (url: string) => axios.get(url).then((res) => res.data)
+  const fetcher = (url: string) => axios.get(url).then((res) => res.data.data)
   const { data: documents } = useSWR('/api/document/get-search', fetcher, {
     refreshInterval: 1000,
   })

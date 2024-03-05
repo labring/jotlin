@@ -34,7 +34,7 @@ const InviteItem = ({
     const fetchDocument = async () => {
       try {
         const response = await getBasicInfoById(documentId)
-        setDocumentInfo(response.data)
+        setDocumentInfo(response.data.data)
       } catch (error) {
         console.error('Error fetching documentInfo:', error)
       }

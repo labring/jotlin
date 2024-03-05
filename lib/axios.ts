@@ -14,10 +14,4 @@ axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config
 })
 
-// 拦截response，将response转换为response.data
-axios.interceptors.response.use((response) => {
-  response = response.data
-  return response
-})
-
 export default axios
