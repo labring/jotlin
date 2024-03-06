@@ -77,7 +77,7 @@ const Navigation = () => {
     if (sidebarRef.current && navbarRef.current) {
       sidebarRef.current.style.width = `${newWidth}px`
       navbarRef.current.style.setProperty('left', `${newWidth}px`)
-      navbarRef.current.style.setProperty('width', `calc(100%-${newWidth}px)`)
+      navbarRef.current.style.setProperty('width', `calc(100% - ${newWidth}px)`)
     }
   }
 
