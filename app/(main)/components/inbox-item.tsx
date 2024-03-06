@@ -14,7 +14,7 @@ const InboxItem = () => {
     const fetchDocument = async () => {
       try {
         const response = await getByEmail(user?.emailAddress as string)
-        setInvitations(response.data.data)
+        setInvitations(response.data)
       } catch (error) {
         console.error('Error fetching document:', error)
       }

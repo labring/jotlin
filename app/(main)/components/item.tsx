@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import { mutate } from 'swr'
 
 interface ItemProps {
   id?: string
@@ -57,8 +58,12 @@ const Item = ({
     if (!id) return
     try {
       toast.loading('Moving to trash...')
-      const response = await archive(id).then(() => router.push('/documents'))
+      await archive(id).then(() => router.push('/documents'))
       toast.success('Note moved to trash!')
+      mutate(
+        (key) =>
+          typeof key === 'string' && key.startsWith('/api/document/sidebar')
+      )
     } catch (error) {
       toast.error('Failed to archive note.')
     }
@@ -81,10 +86,14 @@ const Item = ({
 
     try {
       const response = await create('Untitled', id)
-      const documentId = response.data.data
+      const documentId = response.data
       if (!expanded) {
         onExpand?.()
       }
+      mutate(
+        (key) =>
+          typeof key === 'string' && key.startsWith('/api/document/sidebar')
+      )
       router.push(`/documents/${documentId}`)
     } catch (error) {
       toast.error('Failed to create a new note.')

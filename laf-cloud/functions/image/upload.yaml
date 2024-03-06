@@ -1,6 +1,5 @@
-name: github-auth
+name: image/upload
 desc: ""
 methods:
-  - GET
   - POST
 tags: []

@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation'
 import { SingleImageDropzone } from '../single-image-dropzone'
 import { update } from '@/api/document'
 import { upload } from '@/api/image'
+import { mutate } from 'swr'
 
 const CoverImageModal = () => {
   const params = useParams()
@@ -31,8 +32,12 @@ const CoverImageModal = () => {
       })
       await update({
         _id: params.documentId as string,
-        coverImage: res.data.data.url,
+        coverImage: res.data,
       })
+      mutate(
+        (key) =>
+          typeof key === 'string' && key.startsWith('/api/document/get-by-id')
+      )
     }
     onClose()
   }

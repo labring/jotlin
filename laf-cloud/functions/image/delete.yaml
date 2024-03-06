@@ -1,4 +1,4 @@
-name: document/remove
+name: image/delete
 desc: ""
 methods:
   - DELETE

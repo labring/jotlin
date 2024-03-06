@@ -7,6 +7,7 @@ import { ElementRef, useRef, useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { useCoverImage } from '@/stores/use-cover-image'
 import { Doc, removeIcon, update } from '@/api/document'
+import { mutate } from 'swr'
 
 interface ToolbarProps {
   initialData: Doc
@@ -44,12 +45,14 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
     }
   }
   const onIconSelect = async (icon: string) => {
-    console.log('_id:' + initialData._id)
-    const response = await update({
+    await update({
       _id: initialData._id,
       icon,
     })
-    console.log(response)
+    mutate(
+      (key) =>
+        typeof key === 'string' && key.startsWith('/api/document/get-by-id')
+    )
   }
   const onRemoveIcon = async () => {
     await removeIcon(initialData._id)

@@ -26,6 +26,7 @@ import Navbar from './navbar'
 import Item from './item'
 import UserItem from './user-item'
 import { create } from '@/api/document'
+import { mutate } from 'swr'
 
 const Navigation = () => {
   const router = useRouter()
@@ -76,7 +77,7 @@ const Navigation = () => {
     if (sidebarRef.current && navbarRef.current) {
       sidebarRef.current.style.width = `${newWidth}px`
       navbarRef.current.style.setProperty('left', `${newWidth}px`)
-      navbarRef.current.style.setProperty('width', `calc(100%-${newWidth}px)`)
+      navbarRef.current.style.setProperty('width', `calc(100% - ${newWidth}px)`)
     }
   }
 
@@ -125,9 +126,13 @@ const Navigation = () => {
     try {
       toast.loading('Create a new note...')
       const response = await create('Untitled', '')
-      const documentId = response.data.data
-      router.push(`/documents/${documentId}`)
+      const documentId = response.data
       toast.success('New note created!')
+      mutate(
+        (key) =>
+          typeof key === 'string' && key.startsWith('/api/document/sidebar')
+      )
+      router.push(`/documents/${documentId}`)
     } catch (error) {
       toast.error('Failed to create a new note')
     }
@@ -138,7 +143,7 @@ const Navigation = () => {
       <aside
         ref={sidebarRef}
         className={cn(
-          'group/sidebar relative z-[99999] flex h-full w-60 flex-col overflow-y-auto bg-secondary',
+          'group/sidebar relative  flex h-full w-60 flex-col overflow-y-auto bg-secondary',
           isResetting && 'transition-all duration-300 ease-in-out',
           isMobile && 'w-0'
         )}>

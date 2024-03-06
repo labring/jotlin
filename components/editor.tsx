@@ -7,7 +7,7 @@ import {
 } from '@blocknote/react'
 import { useTheme } from 'next-themes'
 import * as Y from 'yjs'
-import { WebrtcProvider } from 'y-webrtc'
+import { WebsocketProvider } from 'y-websocket'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   blockSchema,
@@ -16,6 +16,7 @@ import {
 } from './editor-blocks/quote'
 import '@blocknote/react/style.css'
 import { upload } from '@/api/image'
+import { useSession } from '@/hooks/use-session'
 
 interface EditorProps {
   onChange: (value: string) => void
@@ -31,8 +32,8 @@ const Editor = ({
   documentId,
 }: EditorProps) => {
   const { resolvedTheme } = useTheme()
-  const [provider, setProvider] = useState<WebrtcProvider>()
-
+  const [provider, setProvider] = useState<WebsocketProvider>()
+  const { user } = useSession()
   const handleUpload = useCallback(async (file: File) => {
     const response = await upload({
       file,
@@ -46,8 +47,17 @@ const Editor = ({
 
   // collaboration
   useEffect(() => {
-    const newProvider = new WebrtcProvider(documentId as string, doc)
+    const newProvider = new WebsocketProvider(
+      'ws://localhost:1234',
+      documentId as string,
+      doc
+    )
+
     setProvider(newProvider)
+    newProvider.on('status', (event: any) => {
+      console.log(event.status) // logs "connected" or "disconnected"
+    })
+
     return () => {
       newProvider.destroy()
     }
@@ -69,7 +79,7 @@ const Editor = ({
       provider,
       fragment: doc.getXmlFragment('document-store'),
       user: {
-        name: 'alex lee',
+        name: user?.username as string,
         color: '#ff0000',
       },
     },

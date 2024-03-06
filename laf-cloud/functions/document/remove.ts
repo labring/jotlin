@@ -30,5 +30,5 @@ export default async function (ctx: FunctionContext) {
     return {error:"Failed to delete document "}
   }
 
-  return { data: existingDocument }
+  return existingDocument
 }

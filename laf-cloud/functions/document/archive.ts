@@ -52,5 +52,5 @@ export default async function (ctx: FunctionContext) {
     _id: objectId
   })
 
-  return { data: updatedDocument }
+  return updatedDocument
 }

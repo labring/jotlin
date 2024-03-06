@@ -10,5 +10,5 @@ export default async function (ctx: FunctionContext) {
     userId
   }).toArray()
   
-  return { data: documents }
+  return documents
 }
