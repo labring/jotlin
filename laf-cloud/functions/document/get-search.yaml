@@ -1,4 +1,5 @@
 name: document/get-search
+desc: ""
 methods:
   - GET
 tags: []

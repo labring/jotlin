@@ -1,4 +1,5 @@
 name: user/get-info
+desc: ""
 methods:
   - GET
 tags: []

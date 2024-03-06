@@ -1,4 +1,5 @@
 name: invitation/create
+desc: ""
 methods:
   - GET
   - POST

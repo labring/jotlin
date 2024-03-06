@@ -125,7 +125,8 @@ const Navigation = () => {
     try {
       toast.loading('Create a new note...')
       const response = await create('Untitled', '')
-      const documentId = response.data.data
+      const documentId = response.data
+      console.log('New document created:', documentId)
       router.push(`/documents/${documentId}`)
       toast.success('New note created!')
     } catch (error) {

@@ -18,5 +18,5 @@ export default async function (ctx: FunctionContext) {
   );
 
   
-  return { data: invitations }
+  return invitations
 }

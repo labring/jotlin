@@ -24,5 +24,5 @@ export default async function (ctx: FunctionContext) {
     return {error:"Unauthorized"}
   }
   
-  return { data: document }
+  return document
 }

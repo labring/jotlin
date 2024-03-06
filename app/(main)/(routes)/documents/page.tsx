@@ -16,7 +16,8 @@ const DocumentsPage = () => {
     try {
       toast.loading('Creating a new note.....')
       const response = await create('untitled', '')
-      const documentId = response.data.data
+      const documentId = response.data
+      console.log(documentId)
       router.push(`/documents/${documentId}`)
     } catch (error) {
       toast.error('Failed to create a new note.')

@@ -7,6 +7,7 @@ const db = cloud.mongo.db
 interface Document{
   title:string
   userId:string
+  icon:string
   isArchived:boolean
   isPublished:boolean
   collaborators:[string]
@@ -25,13 +26,16 @@ export default async function (ctx: FunctionContext) {
     userId: uid,
     isArchived: false,
     isPublished: false,
-    collaborators:[]
+    collaborators:[],
+    icon:'',
+    content:'',
+    coverImage:'',
   }
 
   const documentCursor = await db.collection('documents').insertOne(document)
-  
+
   if(documentCursor.insertedId){
-    return {data:document}
+    return documentCursor.insertedId.toString()
   }
 
   return {error:"Failed to create new document." }

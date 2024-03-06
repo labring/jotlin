@@ -72,5 +72,5 @@ export default async function (ctx: FunctionContext) {
     _id:new ObjectId(invitationParams._id)
   })
 
-  return { data: updatedInvitation }
+  return updatedInvitation
 }

@@ -41,5 +41,5 @@ export default async function (ctx: FunctionContext) {
     return {error:"Failed to create invitation."}
   }
 
-  return { data: invitation }
+  return invitation
 }

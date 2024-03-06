@@ -1,4 +1,5 @@
 name: document/get-trash
+desc: ""
 methods:
   - GET
 tags: []

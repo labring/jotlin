@@ -18,5 +18,5 @@ export default async function (ctx: FunctionContext) {
   
   const {title,icon} = document
 
-  return { data: {title,icon} }
+  return {title,icon} 
 }
