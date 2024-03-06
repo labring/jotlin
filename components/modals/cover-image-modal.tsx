@@ -32,7 +32,7 @@ const CoverImageModal = () => {
       })
       await update({
         _id: params.documentId as string,
-        coverImage: res.data.url,
+        coverImage: res.data,
       })
       mutate(
         (key) =>
