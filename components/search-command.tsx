@@ -22,9 +22,7 @@ export const SearchCommand = () => {
   const router = useRouter()
 
   const fetcher = (url: string) => axios.get(url).then((res) => res.data)
-  const { data: documents } = useSWR('/api/document/get-search', fetcher, {
-    refreshInterval: 1000,
-  })
+  const { data: documents } = useSWR('/api/document/get-search', fetcher)
 
   const [isMounted, setIsMounted] = useState(false)
 

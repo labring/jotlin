@@ -33,8 +33,7 @@ const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data)
   const { data: documents } = useSWR(
     `/api/document/sidebar?parentDocument=${parentDocumentId}`,
-    fetcher,
-    { refreshInterval: 1000 }
+    fetcher
   )
 
   // function: 点击重定向到文档详情页

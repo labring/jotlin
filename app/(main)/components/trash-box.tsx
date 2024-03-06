@@ -15,13 +15,7 @@ const TrashBox = () => {
   const router = useRouter()
   const params = useParams()
   const fetcher = (url: string) => axios.get(url).then((res) => res.data)
-  const { data: documents } = useSWR<Doc[]>(
-    '/api/document/get-trash',
-    fetcher,
-    {
-      refreshInterval: 1000,
-    }
-  )
+  const { data: documents } = useSWR<Doc[]>('/api/document/get-trash', fetcher)
 
   const [search, setSearch] = useState('')
   const filteredDocuments = documents?.filter((document) => {

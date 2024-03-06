@@ -7,8 +7,7 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 export const useDocumentById = (id: string) => {
   const { data: document } = useSWR<Doc>(
     `/api/document/get-by-id?id=${id}`,
-    fetcher,
-    { refreshInterval: 500 }
+    fetcher
   )
 
   return {
