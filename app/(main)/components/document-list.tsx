@@ -13,9 +13,14 @@ interface DocumentListProps {
   parentDocumentId?: string
   level?: number
   data?: Doc[]
+  type: 'private' | 'share'
 }
 
-const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
+const DocumentList = ({
+  parentDocumentId,
+  level = 0,
+  type,
+}: DocumentListProps) => {
   const params = useParams()
   const router = useRouter()
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
@@ -31,8 +36,9 @@ const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
   parentDocumentId = parentDocumentId ? parentDocumentId : ''
 
   const fetcher = (url: string) => axios.get(url).then((res) => res.data)
+
   const { data: documents } = useSWR(
-    `/api/document/sidebar?parentDocument=${parentDocumentId}`,
+    `/api/document/sidebar?parentDocument=${parentDocumentId}&type=${type}`,
     fetcher
   )
 
@@ -57,15 +63,14 @@ const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
 
   return (
     <>
-      {/* 展开时渲染，level=0时隐藏 */}
+      {/* 展开时渲染 */}
       <p
         style={{
-          paddingLeft: level ? `${level * 12 + 25}px` : undefined,
+          paddingLeft: `${level * 12 + 25}px`,
         }}
         className={cn(
           'hidden text-sm font-medium text-muted-foreground/80',
-          expanded && 'last:block', //展开时将父元素的最后一个子元素设置为block，如果没有文档的话，就只有这个p元素，就会被设置为block，然后显示
-          level === 0 && 'hidden'
+          expanded && 'last:block'
         )}>
         No pages inside
       </p>
@@ -83,7 +88,11 @@ const DocumentList = ({ parentDocumentId, level = 0 }: DocumentListProps) => {
             expanded={expanded[document._id]}
           />
           {expanded[document._id] && (
-            <DocumentList parentDocumentId={document._id} level={level + 1} />
+            <DocumentList
+              parentDocumentId={document._id}
+              level={level + 1}
+              type={type}
+            />
           )}
         </div>
       ))}
