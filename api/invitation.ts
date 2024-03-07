@@ -12,9 +12,7 @@ export interface Invitation {
 type CreateParams = Pick<Invitation, 'documentId' | 'collaboratorEmail'>
 // create a new invitation
 export const create = (invitation: CreateParams) => {
-  return axios.post('/api/invitation/create', {
-    data: invitation,
-  })
+  return axios.post('/api/invitation/create', invitation)
 }
 
 // get invitation by email
@@ -24,7 +22,5 @@ export const getByEmail = (email: string) => {
 
 // update invitation
 export const update = (invitation: Invitation) => {
-  return axios.put('/api/invitation/update', {
-    data: invitation,
-  })
+  return axios.put('/api/invitation/update', invitation)
 }
