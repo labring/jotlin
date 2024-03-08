@@ -46,22 +46,22 @@ const Editor = ({
   }, [])
 
   // collaboration
-  useEffect(() => {
-    const newProvider = new WebsocketProvider(
-      'ws://localhost:1234',
-      documentId as string,
-      doc
-    )
+  // useEffect(() => {
+  //   const newProvider = new WebsocketProvider(
+  //     'ws://localhost:1234',
+  //     documentId as string,
+  //     doc
+  //   )
 
-    setProvider(newProvider)
-    newProvider.on('status', (event: any) => {
-      console.log(event.status) // logs "connected" or "disconnected"
-    })
+  //   setProvider(newProvider)
+  //   newProvider.on('status', (event: any) => {
+  //     console.log(event.status) // logs "connected" or "disconnected"
+  //   })
 
-    return () => {
-      newProvider.destroy()
-    }
-  }, [documentId, doc])
+  //   return () => {
+  //     newProvider.destroy()
+  //   }
+  // }, [documentId, doc])
 
   const editor = useBlockNote({
     editable,
@@ -75,14 +75,14 @@ const Editor = ({
       onChange(JSON.stringify(editor.topLevelBlocks, null, 2))
     },
     uploadFile: handleUpload,
-    collaboration: {
-      provider,
-      fragment: doc.getXmlFragment('document-store'),
-      user: {
-        name: user?.username as string,
-        color: '#ff0000',
-      },
-    },
+    // collaboration: {
+    //   provider,
+    //   fragment: doc.getXmlFragment('document-store'),
+    //   user: {
+    //     name: user?.username as string,
+    //     color: '#ff0000',
+    //   },
+    // },
   })
 
   // monitor clipboard,when last paste item is image,update currentBlock;

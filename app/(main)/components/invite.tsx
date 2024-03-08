@@ -7,6 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { useSession } from '@/hooks/use-session'
 import { FormEvent, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -17,16 +18,19 @@ interface InviteProps {
 const Invite = ({ documentId }: InviteProps) => {
   const [collaboratorEmail, setCollaboratorEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { user } = useSession()
 
-  const onInvite = (e: FormEvent) => {
+  const onInvite = async (e: FormEvent) => {
     e.preventDefault()
 
     setIsSubmitting(true)
     try {
       toast.loading('Inviting...')
-      const response = create({ documentId, collaboratorEmail }).finally(() =>
-        setIsSubmitting(false)
-      )
+      await create({
+        documentId,
+        collaboratorEmail,
+        userEmail: user!.emailAddress,
+      }).finally(() => setIsSubmitting(false))
       toast.success('Invitation has been sent')
     } catch (error) {
       toast.error('Failed to invite him.')
