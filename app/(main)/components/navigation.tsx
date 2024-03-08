@@ -27,7 +27,7 @@ import Item from './item'
 import UserItem from './user-item'
 import { create } from '@/api/document'
 import { mutate } from 'swr'
-import InboxItem from './inbox-item'
+import InboxContent from './inbox-content'
 
 const Navigation = () => {
   const router = useRouter()
@@ -170,7 +170,7 @@ const Navigation = () => {
             <PopoverContent
               className="mt-4 w-80 p-4"
               side={isMobile ? 'bottom' : 'right'}>
-              <InboxItem />
+              <InboxContent />
             </PopoverContent>
           </Popover>
           <Item onClick={handleCreate} label="New Page" icon={PlusCircle} />
