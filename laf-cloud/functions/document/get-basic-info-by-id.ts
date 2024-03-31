@@ -4,6 +4,7 @@ import {ObjectId} from "mongodb"
 const db = cloud.mongo.db
 
 export default async function (ctx: FunctionContext) {
+  const userId = ctx.user.uid
   const documentId = ctx.query.id
   const objectId = new ObjectId(documentId)
 
@@ -14,10 +15,8 @@ export default async function (ctx: FunctionContext) {
   if(!document){
     return {error:"Not found."}
   }
-
-  if(document.isPublished&&!document.isArchived){
-    return {data:document}
-  }
   
-  return document
+  const {title,icon} = document
+
+  return {title,icon} 
 }

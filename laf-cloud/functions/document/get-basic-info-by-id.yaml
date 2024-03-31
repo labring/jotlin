@@ -1,0 +1,5 @@
+name: document/get-basic-info-by-id
+desc: ""
+methods:
+  - GET
+tags: []
