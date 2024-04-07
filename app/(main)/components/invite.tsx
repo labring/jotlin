@@ -10,6 +10,7 @@ import {
 import { useSession } from '@/hooks/use-session'
 import { FormEvent, useState } from 'react'
 import { toast } from 'sonner'
+import { UserBoard } from './user-board'
 
 interface InviteProps {
   documentId: string
@@ -37,21 +38,6 @@ const Invite = ({ documentId }: InviteProps) => {
     }
   }
 
-  const onRemovePrivilege = () => {
-    setIsSubmitting(true)
-
-    const promise = remove({
-      collaboratorEmail,
-      documentId,
-    }).finally(() => setIsSubmitting(false))
-
-    toast.promise(promise, {
-      loading: 'removing...',
-      success: 'Privilege has been removed',
-      error: 'Failed to remove him.',
-    })
-  }
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -59,7 +45,7 @@ const Invite = ({ documentId }: InviteProps) => {
           Invite
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-72" align="end" alignOffset={8} forceMount>
+      <PopoverContent className="w-96" align="end" alignOffset={8} forceMount>
         <form onSubmit={onInvite} className="flex space-x-1">
           <input
             type="email"
@@ -77,8 +63,7 @@ const Invite = ({ documentId }: InviteProps) => {
             Submit
           </Button>
         </form>
-        {/* user board */}
-        <div className="mt-2 space-y-2">UserBoard</div>
+        <UserBoard documentId={documentId} />
       </PopoverContent>
     </Popover>
   )
