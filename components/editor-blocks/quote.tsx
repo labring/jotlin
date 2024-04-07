@@ -1,6 +1,6 @@
-import { defaultBlockSchema, defaultBlockSpecs } from '@blocknote/core'
-import { createReactBlockSpec, ReactSlashMenuItem } from '@blocknote/react'
+import { createReactBlockSpec } from '@blocknote/react'
 import { TbBlockquote } from 'react-icons/tb'
+import { blockSchema } from './index'
 
 const BlockQuoteBlock = createReactBlockSpec(
   {
@@ -15,26 +15,17 @@ const BlockQuoteBlock = createReactBlockSpec(
   }
 )
 
-const blockSchema = {
-  ...defaultBlockSchema,
-  blockquote: BlockQuoteBlock.config,
-}
-
-const blockSpecs = {
-  ...defaultBlockSpecs,
-  blockquote: BlockQuoteBlock,
-}
-
-const insertBlockQuote: ReactSlashMenuItem<typeof blockSchema> = {
-  name: 'Blockquote',
-  execute: (editor) => {
+const insertBlockQuote = (editor: typeof blockSchema.BlockNoteEditor) => ({
+  title: 'Blockquote',
+  onItemClick: () => {
     editor.updateBlock(editor.getTextCursorPosition().block, {
       type: 'blockquote',
     })
   },
   aliases: ['quote'],
-  hint: 'Used to define a block of text referenced from another source',
+  subtext: 'Used to define a block of text referenced from another source',
   group: 'Advanced',
   icon: <TbBlockquote />,
-}
-export { blockSchema, blockSpecs, insertBlockQuote }
+})
+
+export { BlockQuoteBlock, insertBlockQuote }

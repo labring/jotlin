@@ -2,21 +2,18 @@
 
 import {
   BlockNoteView,
-  useBlockNote,
-  getDefaultReactSlashMenuItems,
+  useCreateBlockNote,
+  SuggestionMenuController,
 } from '@blocknote/react'
 import { useTheme } from 'next-themes'
 import * as Y from 'yjs'
 import { WebsocketProvider } from 'y-websocket'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import {
-  blockSchema,
-  blockSpecs,
-  insertBlockQuote,
-} from './editor-blocks/quote'
 import '@blocknote/react/style.css'
 import { upload } from '@/api/image'
 import { useSession } from '@/hooks/use-session'
+import { blockSchema, getCustomSlashMenuItems } from './editor-blocks'
+import { filterSuggestionItems } from '@blocknote/core'
 
 interface EditorProps {
   onChange: (value: string) => void
@@ -63,17 +60,9 @@ const Editor = ({
   //   }
   // }, [documentId, doc])
 
-  const editor = useBlockNote({
-    editable,
-    blockSpecs: blockSpecs,
-    slashMenuItems: [
-      ...getDefaultReactSlashMenuItems(blockSchema),
-      insertBlockQuote,
-    ],
+  const editor = useCreateBlockNote({
+    schema: blockSchema,
     initialContent: initialContent ? JSON.parse(initialContent) : undefined,
-    onEditorContentChange: (editor) => {
-      onChange(JSON.stringify(editor.topLevelBlocks, null, 2))
-    },
     uploadFile: handleUpload,
     // collaboration: {
     //   provider,
@@ -123,9 +112,20 @@ const Editor = ({
   return (
     <div>
       <BlockNoteView
+        editable={editable}
         editor={editor}
         theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
-      />
+        onChange={() => {
+          onChange(JSON.stringify(editor.document, null, 2))
+        }}
+        slashMenu={false}>
+        <SuggestionMenuController
+          triggerCharacter={'/'}
+          getItems={async (query) =>
+            filterSuggestionItems(getCustomSlashMenuItems(editor), query)
+          }
+        />
+      </BlockNoteView>
     </div>
   )
 }
