@@ -22,6 +22,25 @@ interface EditorProps {
   documentId?: string
 }
 
+const getRandomColor = () => {
+  const colors = [
+    '#FF0000',
+    '#00FF00',
+    '#0000FF',
+    '#FFFF00',
+    '#FF00FF',
+    '#00FFFF',
+    '#FFA500',
+    '#800080',
+    '#008000',
+    '#000080',
+    '#800000',
+    '#008080',
+  ]
+  const randomIndex = Math.floor(Math.random() * colors.length)
+  return colors[randomIndex]
+}
+
 const Editor = ({
   onChange,
   initialContent,
@@ -29,8 +48,8 @@ const Editor = ({
   documentId,
 }: EditorProps) => {
   const { resolvedTheme } = useTheme()
-  const [provider, setProvider] = useState<WebsocketProvider>()
   const { user } = useSession()
+
   const handleUpload = useCallback(async (file: File) => {
     const response = await upload({
       file,
@@ -43,36 +62,38 @@ const Editor = ({
   }, [])
 
   // collaboration
-  // useEffect(() => {
-  //   const newProvider = new WebsocketProvider(
-  //     'ws://localhost:1234',
-  //     documentId as string,
-  //     doc
-  //   )
+  const provider = useMemo(() => {
+    if (!documentId) {
+      return null
+    }
 
-  //   setProvider(newProvider)
-  //   newProvider.on('status', (event: any) => {
-  //     console.log(event.status) // logs "connected" or "disconnected"
-  //   })
+    const newProvider = new WebsocketProvider(
+      'ws://localhost:1234',
+      documentId,
+      doc
+    )
 
-  //   return () => {
-  //     newProvider.destroy()
-  //   }
-  // }, [documentId, doc])
+    newProvider.on('status', (event: any) => {
+      console.log(event.status) // logs "connected" or "disconnected"
+    })
+
+    return newProvider
+  }, [doc, documentId])
 
   const editor = useCreateBlockNote({
     schema: blockSchema,
     initialContent: initialContent ? JSON.parse(initialContent) : undefined,
     uploadFile: handleUpload,
-    // collaboration: {
-    //   provider,
-    //   fragment: doc.getXmlFragment('document-store'),
-    //   user: {
-    //     name: user?.username as string,
-    //     color: '#ff0000',
-    //   },
-    // },
+    collaboration: {
+      provider,
+      fragment: doc.getXmlFragment('document-store'),
+      user: {
+        name: user?.username as string,
+        color: getRandomColor(),
+      },
+    },
   })
+  console.log(editor)
 
   // monitor clipboard,when last paste item is image,update currentBlock;
   // when last paste item is md-text,insert after currentBlock.
