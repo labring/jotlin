@@ -10,6 +10,7 @@ import { useSession } from '@/hooks/use-session'
 import { User, getUserInfoByEmail } from '@/api/user'
 import { Invitation, update } from '@/api/invitation'
 import { mutate } from 'swr'
+import { Spinner } from '@/components/spinner'
 
 type DocumentInfo = Pick<Doc, 'title' | 'icon'>
 type UserInfo = Pick<User, 'username' | 'imageUrl'>
@@ -87,13 +88,22 @@ const InviteItem = ({ invitation }: InviteItemProps) => {
     }
   }
 
-  // if document has been removed
+  // if document has been removed or user has been removed or the invitation is invalid
   if (!isValid) {
-    return <div>The document related invitation has been deleted</div>
+    return (
+      <div className="h-10">
+        <div className="text-gray-500">This invitation has been expired</div>
+        <Separator className="mt-2" />
+      </div>
+    )
   }
 
   if (documentInfo === undefined || userInfo === undefined) {
-    return <div>Loading...</div>
+    return (
+      <div className="flex items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    )
   }
 
   return (
@@ -136,8 +146,7 @@ const InviteItem = ({ invitation }: InviteItemProps) => {
               alt={userInfo?.username}></AvatarImage>
           </Avatar>
           <div>
-            You are invited by <span className="font-light">{userEmail}</span>{' '}
-            to
+            <span className="font-light">{userEmail}</span> invite you to to
             <span className="ml-2">
               {documentInfo?.icon ? (
                 <span>{documentInfo.icon}</span>
@@ -151,7 +160,7 @@ const InviteItem = ({ invitation }: InviteItemProps) => {
                 {documentInfo?.title}
               </span>
             </span>
-            <div className="text-right text-xs font-medium text-muted-foreground">
+            <div className="mt-2 text-right text-xs font-medium text-muted-foreground">
               {!isReplied ? (
                 <div>
                   <Button
