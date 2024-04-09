@@ -9,7 +9,7 @@ const BlockQuoteBlock = createReactBlockSpec(
     content: 'inline',
   },
   {
-    render: ({ block, contentRef }) => {
+    render: ({ contentRef }) => {
       return <blockquote ref={contentRef}></blockquote>
     },
     parse: (element) => {
