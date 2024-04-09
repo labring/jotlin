@@ -12,6 +12,11 @@ const BlockQuoteBlock = createReactBlockSpec(
     render: ({ block, contentRef }) => {
       return <blockquote ref={contentRef}></blockquote>
     },
+    parse: (element) => {
+      if (element.tagName === 'BLOCKQUOTE') {
+        return {}
+      }
+    },
   }
 )
 

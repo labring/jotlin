@@ -14,6 +14,7 @@ import { upload } from '@/api/image'
 import { useSession } from '@/hooks/use-session'
 import { blockSchema, getCustomSlashMenuItems } from './editor-blocks'
 import { filterSuggestionItems } from '@blocknote/core'
+import { marked } from 'marked'
 
 interface EditorProps {
   onChange: (value: string) => void
@@ -93,8 +94,8 @@ const Editor = ({
       },
     },
   })
-  console.log(editor)
 
+  // FIXME: 粘贴大量markdown文本时会出现粘贴两次的情况
   // monitor clipboard,when last paste item is image,update currentBlock;
   // when last paste item is md-text,insert after currentBlock.
   useEffect(() => {
@@ -113,12 +114,14 @@ const Editor = ({
             props: { url: imageUrl },
           })
         })
-      } else if (item.kind === 'string' && item.type.match('text/plain')) {
+      } else if (item.kind === 'string') {
         item.getAsString(async (markdown) => {
-          const blocksFromMarkdown =
-            await editor.tryParseMarkdownToBlocks(markdown)
+          console.log(markdown)
+          const markdownHtml = await marked.parse(markdown, { breaks: true })
+          console.log(markdownHtml)
 
-          editor.replaceBlocks([currentBlock], blocksFromMarkdown)
+          const blocksFromHTML = await editor.tryParseHTMLToBlocks(markdownHtml)
+          editor.replaceBlocks([currentBlock], blocksFromHTML)
         })
       }
     }
