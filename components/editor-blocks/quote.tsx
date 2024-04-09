@@ -15,6 +15,7 @@ const BlockQuoteBlock = createReactBlockSpec(
   }
 )
 
+// FIXME: This is a temporary solution to avoid group key same error(to other)
 const insertBlockQuote = (editor: typeof blockSchema.BlockNoteEditor) => ({
   title: 'Blockquote',
   onItemClick: () => {
@@ -24,7 +25,7 @@ const insertBlockQuote = (editor: typeof blockSchema.BlockNoteEditor) => ({
   },
   aliases: ['quote'],
   subtext: 'Used to define a block of text referenced from another source',
-  group: 'Advanced',
+  group: 'Other',
   icon: <TbBlockquote />,
 })
 

@@ -8,7 +8,7 @@ import {
 import { useTheme } from 'next-themes'
 import * as Y from 'yjs'
 import { WebsocketProvider } from 'y-websocket'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import '@blocknote/react/style.css'
 import { upload } from '@/api/image'
 import { useSession } from '@/hooks/use-session'
