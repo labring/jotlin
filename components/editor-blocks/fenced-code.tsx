@@ -18,33 +18,40 @@ const fencedCodeBlock = createReactBlockSpec(
     propSchema: {
       ...defaultProps,
       language: { default: 'js' },
+      code: { default: '' },
     },
     content: 'inline',
   },
   {
-    render: ({ contentRef, block }) => (
-      <div className="relative rounded-md bg-foreground/5 p-2">
-        <Select defaultValue={block.props.language}>
-          <SelectTrigger className="absolute right-1 top-1 h-max w-[180px] p-1">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {/* FIXME: 语言列表待增加,js和javascript缩写影响 */}
-              <SelectLabel>Languages</SelectLabel>
-              <SelectItem value="js">JavaScript</SelectItem>
-              <SelectItem value="jsx">React</SelectItem>
-              <SelectItem value="cs">C#</SelectItem>
-              <SelectItem value="cpp">C++</SelectItem>
-              <SelectItem value="rust">Rust</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <pre>
-          <code ref={contentRef} className={block.props.language}></code>
-        </pre>
-      </div>
-    ),
+    render: ({ block, contentRef }) => {
+      return (
+        <div className="relative rounded-md bg-foreground/5 p-2">
+          <Select defaultValue={block.props.language}>
+            <SelectTrigger className="absolute right-1 top-1 h-max w-[180px] p-1">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {/* FIXME: 语言列表待增加,js和javascript缩写影响 */}
+                <SelectLabel>Languages</SelectLabel>
+                <SelectItem value="js">JavaScript</SelectItem>
+                <SelectItem value="jsx">React</SelectItem>
+                <SelectItem value="cs">C#</SelectItem>
+                <SelectItem value="cpp">C++</SelectItem>
+                <SelectItem value="rust">Rust</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <pre>
+            <code
+              ref={contentRef}
+              className={'language-' + block.props.language}>
+              {block.props.code}
+            </code>
+          </pre>
+        </div>
+      )
+    },
     parse: (element) => {
       if (
         element.tagName === 'PRE' &&
@@ -58,8 +65,12 @@ const fencedCodeBlock = createReactBlockSpec(
             language = className.substring(9)
           }
         })
-
-        return { language: language ? language : 'js' }
+        return {
+          language: language ? language : 'js',
+          code: element.children[0].textContent
+            ? element.children[0].textContent
+            : '',
+        }
       }
     },
   }
