@@ -79,6 +79,7 @@ export const removeCoverImage = (id: string) => {
 // remove access to this document
 export const removeAccess = (documentId: string, collaboratorEmail: string) => {
   return axios.put('/api/document/remove-access', {
-    data: { documentId, collaboratorEmail },
+    documentId,
+    collaboratorEmail,
   })
 }

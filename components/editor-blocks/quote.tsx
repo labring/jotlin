@@ -1,6 +1,6 @@
-import { defaultBlockSchema, defaultBlockSpecs } from '@blocknote/core'
-import { createReactBlockSpec, ReactSlashMenuItem } from '@blocknote/react'
+import { createReactBlockSpec } from '@blocknote/react'
 import { TbBlockquote } from 'react-icons/tb'
+import { blockSchema } from './index'
 
 const BlockQuoteBlock = createReactBlockSpec(
   {
@@ -9,32 +9,29 @@ const BlockQuoteBlock = createReactBlockSpec(
     content: 'inline',
   },
   {
-    render: ({ block, contentRef }) => {
+    render: ({ contentRef }) => {
       return <blockquote ref={contentRef}></blockquote>
+    },
+    parse: (element) => {
+      if (element.tagName === 'BLOCKQUOTE') {
+        return {}
+      }
     },
   }
 )
 
-const blockSchema = {
-  ...defaultBlockSchema,
-  blockquote: BlockQuoteBlock.config,
-}
-
-const blockSpecs = {
-  ...defaultBlockSpecs,
-  blockquote: BlockQuoteBlock,
-}
-
-const insertBlockQuote: ReactSlashMenuItem<typeof blockSchema> = {
-  name: 'Blockquote',
-  execute: (editor) => {
+// FIXME: This is a temporary solution to avoid group key same error(to other)
+const insertBlockQuote = (editor: typeof blockSchema.BlockNoteEditor) => ({
+  title: 'Blockquote',
+  onItemClick: () => {
     editor.updateBlock(editor.getTextCursorPosition().block, {
       type: 'blockquote',
     })
   },
   aliases: ['quote'],
-  hint: 'Used to define a block of text referenced from another source',
-  group: 'Advanced',
+  subtext: 'Used to define a block of text referenced from another source',
+  group: 'Other',
   icon: <TbBlockquote />,
-}
-export { blockSchema, blockSpecs, insertBlockQuote }
+})
+
+export { BlockQuoteBlock, insertBlockQuote }

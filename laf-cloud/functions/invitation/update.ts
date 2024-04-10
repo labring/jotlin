@@ -4,16 +4,18 @@ import { ObjectId } from 'mongodb'
 const db = cloud.mongo.db
 
 export default async function (ctx: FunctionContext) {
-  const invitationParams = ctx.body
+  const {_id,isAccepted} = ctx.body
   const userId = ctx.user.uid
   // if there is one invitation which is not replied
   const existingInvitation = await db.collection('invitations').findOne({
-    _id:new ObjectId(invitationParams._id)
+    _id:new ObjectId(_id)
   })
 
   if(!existingInvitation){
-    return {error:"Not found."}
+    return {error:"Invitation is not found."}
   }
+
+  const documentId = existingInvitation.documentId
 
   const user = await db.collection("users").findOne({
     _id:new ObjectId(userId)
@@ -24,10 +26,10 @@ export default async function (ctx: FunctionContext) {
     return {error:"Unauthorized"}
   }
   
-  const invitationNotice = await db.collection('invitations').updateOne({_id:new ObjectId(invitationParams._id)},{
+  const invitationNotice = await db.collection('invitations').updateOne({_id:new ObjectId(_id)},{
     $set:{
       isReplied:true,
-      isAccepted:invitationParams.isAccepted
+      isAccepted
     }
   })
 
@@ -51,12 +53,12 @@ export default async function (ctx: FunctionContext) {
   }
   
   const document = await db.collection("documents").findOne({
-    _id:new ObjectId(invitationParams.documentId)
+    _id:new ObjectId(documentId)
   })
 
   const updateCollaborators = [...document.collaborators,user.emailAddress]
 
-  const updateDocumentNotice = await db.collection("documents").updateOne({_id:new ObjectId(invitationParams.documentId)},{
+  const updateDocumentNotice = await db.collection("documents").updateOne({_id:new ObjectId(documentId)},{
     $set:{
       collaborators:updateCollaborators
     }
@@ -66,10 +68,10 @@ export default async function (ctx: FunctionContext) {
     return {error:"Failed to update Document about collaborators"}
   }
 
-  recursiveUpdate(invitationParams.documentId)
+  recursiveUpdate(documentId)
 
   const updatedInvitation = await db.collection("invitations").findOne({
-    _id:new ObjectId(invitationParams._id)
+    _id:new ObjectId(_id)
   })
 
   return updatedInvitation

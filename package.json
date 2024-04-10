@@ -11,8 +11,8 @@
     "shadcn-ui": "npx shadcn-ui@latest add"
   },
   "dependencies": {
-    "@blocknote/core": "^0.11.1",
-    "@blocknote/react": "^0.11.1",
+    "@blocknote/core": "^0.12.4",
+    "@blocknote/react": "^0.12.4",
     "@clerk/clerk-react": "^4.30.3",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -21,6 +21,7 @@
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-scroll-area": "^1.0.5",
+    "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "axios": "^1.6.7",
@@ -29,6 +30,7 @@
     "cmdk": "^0.2.0",
     "emoji-picker-react": "^4.5.16",
     "lucide-react": "^0.350.0",
+    "marked": "^12.0.1",
     "next": "14.0.3",
     "next-themes": "^0.2.1",
     "react": "^18",

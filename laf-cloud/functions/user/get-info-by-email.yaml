@@ -1,0 +1,5 @@
+name: user/get-info-by-email
+desc: ""
+methods:
+  - GET
+tags: []

@@ -2,27 +2,44 @@
 
 import {
   BlockNoteView,
-  useBlockNote,
-  getDefaultReactSlashMenuItems,
+  useCreateBlockNote,
+  SuggestionMenuController,
 } from '@blocknote/react'
 import { useTheme } from 'next-themes'
 import * as Y from 'yjs'
 import { WebsocketProvider } from 'y-websocket'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import {
-  blockSchema,
-  blockSpecs,
-  insertBlockQuote,
-} from './editor-blocks/quote'
+import { useCallback, useEffect, useMemo } from 'react'
 import '@blocknote/react/style.css'
 import { upload } from '@/api/image'
 import { useSession } from '@/hooks/use-session'
+import { blockSchema, getCustomSlashMenuItems } from './editor-blocks'
+import { filterSuggestionItems } from '@blocknote/core'
+import { marked } from 'marked'
 
 interface EditorProps {
   onChange: (value: string) => void
   initialContent?: string
   editable?: boolean
   documentId?: string
+}
+
+const getRandomColor = () => {
+  const colors = [
+    '#FF0000',
+    '#00FF00',
+    '#0000FF',
+    '#FFFF00',
+    '#FF00FF',
+    '#00FFFF',
+    '#FFA500',
+    '#800080',
+    '#008000',
+    '#000080',
+    '#800000',
+    '#008080',
+  ]
+  const randomIndex = Math.floor(Math.random() * colors.length)
+  return colors[randomIndex]
 }
 
 const Editor = ({
@@ -32,8 +49,8 @@ const Editor = ({
   documentId,
 }: EditorProps) => {
   const { resolvedTheme } = useTheme()
-  const [provider, setProvider] = useState<WebsocketProvider>()
   const { user } = useSession()
+
   const handleUpload = useCallback(async (file: File) => {
     const response = await upload({
       file,
@@ -46,45 +63,39 @@ const Editor = ({
   }, [])
 
   // collaboration
-  // useEffect(() => {
-  //   const newProvider = new WebsocketProvider(
-  //     'ws://localhost:1234',
-  //     documentId as string,
-  //     doc
-  //   )
+  const provider = useMemo(() => {
+    if (!documentId) {
+      return null
+    }
 
-  //   setProvider(newProvider)
-  //   newProvider.on('status', (event: any) => {
-  //     console.log(event.status) // logs "connected" or "disconnected"
-  //   })
+    const newProvider = new WebsocketProvider(
+      'ws://localhost:1234',
+      documentId,
+      doc
+    )
 
-  //   return () => {
-  //     newProvider.destroy()
-  //   }
-  // }, [documentId, doc])
+    newProvider.on('status', (event: any) => {
+      console.log(event.status) // logs "connected" or "disconnected"
+    })
 
-  const editor = useBlockNote({
-    editable,
-    blockSpecs: blockSpecs,
-    slashMenuItems: [
-      ...getDefaultReactSlashMenuItems(blockSchema),
-      insertBlockQuote,
-    ],
+    return newProvider
+  }, [doc, documentId])
+
+  const editor = useCreateBlockNote({
+    schema: blockSchema,
     initialContent: initialContent ? JSON.parse(initialContent) : undefined,
-    onEditorContentChange: (editor) => {
-      onChange(JSON.stringify(editor.topLevelBlocks, null, 2))
-    },
     uploadFile: handleUpload,
-    // collaboration: {
-    //   provider,
-    //   fragment: doc.getXmlFragment('document-store'),
-    //   user: {
-    //     name: user?.username as string,
-    //     color: '#ff0000',
-    //   },
-    // },
+    collaboration: {
+      provider,
+      fragment: doc.getXmlFragment('document-store'),
+      user: {
+        name: user?.username as string,
+        color: getRandomColor(),
+      },
+    },
   })
 
+  // FIXME: 粘贴大量markdown文本时会出现粘贴两次的情况
   // monitor clipboard,when last paste item is image,update currentBlock;
   // when last paste item is md-text,insert after currentBlock.
   useEffect(() => {
@@ -103,12 +114,14 @@ const Editor = ({
             props: { url: imageUrl },
           })
         })
-      } else if (item.kind === 'string' && item.type.match('text/plain')) {
+      } else if (item.kind === 'string') {
         item.getAsString(async (markdown) => {
-          const blocksFromMarkdown =
-            await editor.tryParseMarkdownToBlocks(markdown)
+          console.log(markdown)
+          const markdownHtml = await marked.parse(markdown, { breaks: true })
+          console.log(markdownHtml)
 
-          editor.replaceBlocks([currentBlock], blocksFromMarkdown)
+          const blocksFromHTML = await editor.tryParseHTMLToBlocks(markdownHtml)
+          editor.replaceBlocks([currentBlock], blocksFromHTML)
         })
       }
     }
@@ -123,9 +136,20 @@ const Editor = ({
   return (
     <div>
       <BlockNoteView
+        editable={editable}
         editor={editor}
         theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
-      />
+        onChange={() => {
+          onChange(JSON.stringify(editor.document, null, 2))
+        }}
+        slashMenu={false}>
+        <SuggestionMenuController
+          triggerCharacter={'/'}
+          getItems={async (query) =>
+            filterSuggestionItems(getCustomSlashMenuItems(editor), query)
+          }
+        />
+      </BlockNoteView>
     </div>
   )
 }
