@@ -23,10 +23,14 @@ const fencedCodeBlock = createReactBlockSpec(
     content: 'inline',
   },
   {
-    render: ({ block, contentRef }) => {
+    render: ({ block, contentRef, editor }) => {
       return (
         <div className="relative rounded-md bg-foreground/5 p-2">
-          <Select defaultValue={block.props.language}>
+          <Select
+            defaultValue={block.props.language}
+            onValueChange={(newValue) => {
+              editor.updateBlock(block, { props: { language: newValue } })
+            }}>
             <SelectTrigger className="absolute right-1 top-1 h-max w-[180px] p-1">
               <SelectValue />
             </SelectTrigger>
