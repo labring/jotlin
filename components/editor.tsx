@@ -95,31 +95,6 @@ const Editor = ({
     },
   })
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Enter' && !event.shiftKey) {
-        const pos = editor.getTextCursorPosition()
-        if (pos.block.type === 'fencedCode') {
-          event.preventDefault()
-          event.stopPropagation()
-
-          const keyEvent = new KeyboardEvent('keydown', {
-            code: 'Enter',
-            key: 'Enter',
-            shiftKey: true,
-            view: window,
-            bubbles: false,
-          })
-          editor.domElement.dispatchEvent(keyEvent)
-        }
-      }
-    }
-    document.addEventListener('keydown', handleKeyDown, true)
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown, true)
-    }
-  }, [editor])
-
   // FIXME: 粘贴大量markdown文本时会出现粘贴两次的情况
   // monitor clipboard,when last paste item is image,update currentBlock;
   // when last paste item is md-text,insert after currentBlock.
