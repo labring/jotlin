@@ -1,4 +1,3 @@
-import { defaultProps } from '@blocknote/core'
 import { createReactBlockSpec } from '@blocknote/react'
 import { TbCode } from 'react-icons/tb'
 import {
@@ -11,44 +10,82 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { blockSchema } from './index'
+import Editor from 'react-simple-code-editor'
+import Prism, { highlight } from 'prismjs'
+import 'prismjs/themes/prism.css'
+
+//PERF: 语言列表这里可以优化，暂时只使用这些
+const languageOptions = [
+  'js',
+  'html',
+  'css',
+  'go',
+  'c',
+  'cpp',
+  'rust',
+  'python',
+  'java',
+]
+
+languageOptions.forEach((lang) => {
+  if (lang === 'js' || lang === 'html' || lang === 'css') return
+  import(`prismjs/components/prism-${lang}`)
+    .then(() => {
+      console.log(`Prism language component for ${lang} loaded.`)
+    })
+    .catch((err) => {
+      console.error(`Failed to load Prism language component for ${lang}:`, err)
+    })
+})
 
 const fencedCodeBlock = createReactBlockSpec(
   {
     type: 'fencedCode',
     propSchema: {
-      ...defaultProps,
       language: { default: 'js' },
       code: { default: '' },
     },
-    content: 'inline',
+    content: 'none',
   },
   {
-    render: ({ block, contentRef }) => {
+    render: ({ block, editor }) => {
+      const language = block.props.language
+      const code = block.props.code
       return (
         <div className="relative rounded-md bg-foreground/5 p-2">
-          <Select defaultValue={block.props.language}>
-            <SelectTrigger className="absolute right-1 top-1 h-max w-[180px] p-1">
+          <Select
+            defaultValue={language}
+            onValueChange={(newValue) => {
+              editor.updateBlock(block, { props: { language: newValue } })
+            }}>
+            <SelectTrigger className="absolute right-1 top-1 z-50 h-max w-[180px] p-1">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {/* FIXME: 语言列表待增加,js和javascript缩写影响 */}
                 <SelectLabel>Languages</SelectLabel>
-                <SelectItem value="js">JavaScript</SelectItem>
-                <SelectItem value="jsx">React</SelectItem>
-                <SelectItem value="cs">C#</SelectItem>
-                <SelectItem value="cpp">C++</SelectItem>
-                <SelectItem value="rust">Rust</SelectItem>
+                {languageOptions.map((language) => (
+                  <SelectItem key={language} value={language}>
+                    {language}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
-          <pre>
-            <code
-              ref={contentRef}
-              className={'language-' + block.props.language}>
-              {block.props.code}
-            </code>
-          </pre>
+          <Editor
+            value={code}
+            onValueChange={(code) => {
+              editor.updateBlock(block, { props: { code } })
+            }}
+            highlight={(code) =>
+              highlight(code, Prism.languages[language], language)
+            }
+            padding={20}
+            style={{
+              fontSize: 16,
+            }}
+            textareaClassName="code-editor-textarea"
+          />
         </div>
       )
     },
@@ -87,4 +124,5 @@ const insertFencedCodeBlock = (editor: typeof blockSchema.BlockNoteEditor) => ({
   group: 'Other',
   icon: <TbCode />,
 })
+
 export { insertFencedCodeBlock, fencedCodeBlock }
