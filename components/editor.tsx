@@ -55,7 +55,8 @@ const Editor = ({
     const response = await upload({
       file,
     })
-    return response.data.url
+    console.log(response)
+    return response.data
   }, [])
 
   const doc = useMemo(() => {
