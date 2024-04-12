@@ -1,41 +1,56 @@
-## Jotlin
+# Jotlin
 
-Base in a tutorial project from antonio(I admire most),and it will go further.
+> 💡Note: The project is still in its early stages,your interest and contributions are welcome.
 
-![image-20231125092052619](https://raw.githubusercontent.com/mlhiter/typora-images/master/202311250920768.png)
+### 👀Key Features：
 
-![image-20231125092157295](https://raw.githubusercontent.com/mlhiter/typora-images/master/202311250921576.png)
+- Jotlin is an open-source version of Notion, but it incorporates the capabilities of LLM throughout the writing process.
+  - Notion-like editor experience.
+  - Before writing, AI automatically assists in retrieving information.
+  - During writing, it generates content.
+  - After writing is completed, it automatically generates intelligent Q&A and summaries for the article's knowledge base.
+  
+- Enterprises can deploy it in a private cloud environment to ensure data security and support team collaboration and permission control capabilities.
 
-Jotlin is an open-source version of Notion, but it incorporates the capabilities of LLM throughout the writing process. Before writing, AI automatically assists in retrieving information. During writing, it generates content. After writing is completed, it automatically generates intelligent Q&A and summaries for the article's knowledge base. Enterprises can deploy it in a private cloud environment to ensure data security and support team collaboration and permission control capabilities.
+![image-20240412204148692](https://raw.githubusercontent.com/mlhiter/typora-images/master/202404122041888.png)
 
-### Key Feature:
+![image-20240412204109849](https://raw.githubusercontent.com/mlhiter/typora-images/master/202404122041156.png)
 
-- Real-time database
-- Notion-style editor
-- Theme mode
-- Infinite children documents
-- Trash can& soft delete
-- Authentication
-- File upload,delete,replacement
-- Icons for each document(change in real-time)
-- Expandable sidebar
-- Full mobile responsiveness
-- Publish your note to web
-- Landing page
-- Cover image of each document
-- Recover deleted files
+### 👜Technology stack：
 
-### Technology stack：
+NextJS + Shadcn-UI + BlockNote + Laf
 
-- React、NextJS -> Basic framework
-- Tailwind CSS->CSS framework
-- Laf ->Real-time transactional database,backend and object storage
-- Shadcn-ui->UI components library
-- BlockNote->Block-based rich text editor
-- useSWR->Data fetching library
-- axios->HTTP library
-- NextAuth.js->Authentication
-- Emoji-picker-react->Emoji picker
-- Lucide-react->Icon sets
-- Sonner->Toast component
-- Zustand->State management solution
+### 🤔Road Map：
+
+1. Basic editor capabilities
+   - [ ] Support common block and inline styles
+   - [ ] Support Kanban and mention
+   - [ ] Optimize editor performance
+   - [ ] Improve markdown syntax import and export
+   - [ ] meta information support
+2. Advanced editor capabilities
+   - [ ] notion like database
+   - [ ] templa
+3. LLM integration
+   1. [FastGPT](https://github.com/labring/FastGPT) integration
+      1. [ ] Knowledge base support
+      2. [ ] Text reader support
+      3. [ ] database integration to ai work flow 
+   2. Writing AI assistant
+      - [ ] basic AI-assistant chat use Apikey
+      - [ ] retrieving information with LLM
+      - [ ] basic generates content feature
+      - [ ] intelligent Q&A with your article and knowledge base
+      - [ ] AI-label and content summarize
+4. Team Collaboration
+   - [ ] Memeber management
+5. Devops capabilities
+   - [ ] Deploy to docker
+   - [ ] Deploy to [sealos](https://github.com/labring/sealos)
+
+### 🥰 Thanks to：
+
+-  [Antonio](https://github.com/AntonioErdeljac)(his tutorial helps me so much)
+  - This project is base in a tutorial project from him,and it will go further.[His website](https://www.codewithantonio.com/)
+- [BlockNote](https://github.com/TypeCellOS/BlockNote)
+  - Support core block editor,saved me so much time.
