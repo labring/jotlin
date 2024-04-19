@@ -8,6 +8,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import { useCoverImage } from '@/stores/use-cover-image'
 import { Doc, removeIcon, update } from '@/api/document'
 import { mutate } from 'swr'
+import { useDocument } from '@/stores/use-document'
 
 interface ToolbarProps {
   initialData: Doc
@@ -18,6 +19,7 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   const inputRef = useRef<ElementRef<'textarea'>>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [value, setValue] = useState(initialData.title)
+  const { document, onSetDocument } = useDocument()
 
   const coverImage = useCoverImage()
   const enableInput = () => {
@@ -30,14 +32,17 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
     }, 0)
   }
 
-  const disableInput = () => setIsEditing(false)
-  const onInput = async (value: string) => {
-    setValue(value)
-    await update({
+  const disableInput = async () => {
+    setIsEditing(false)
+    const response = await update({
       _id: initialData._id,
       title: value || 'Untitled',
     })
+    // FIXME: how to show data directly in the UI when we didn't fetch it.
+    const newDocument = response.data
+    onSetDocument(newDocument)
   }
+
   const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
@@ -45,18 +50,20 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
     }
   }
   const onIconSelect = async (icon: string) => {
-    await update({
+    const response = await update({
       _id: initialData._id,
       icon,
     })
-    mutate(
-      (key) =>
-        typeof key === 'string' && key.startsWith('/api/document/get-by-id')
-    )
+    const newDocument = response.data
+    onSetDocument(newDocument)
   }
+
   const onRemoveIcon = async () => {
-    await removeIcon(initialData._id)
+    const response = await removeIcon(initialData._id)
+    const newDocument = response.data
+    onSetDocument(newDocument)
   }
+
   return (
     <div className="group relative pl-[54px]">
       {!!initialData.icon && !preview && (
@@ -108,7 +115,7 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
           onBlur={disableInput}
           onKeyDown={onKeyDown}
           value={value}
-          onChange={(e) => onInput(e.target.value)}
+          onChange={(e) => setValue(e.target.value)}
           className="resize-none break-words bg-transparent text-5xl font-bold text-[#3F3F3F] outline-none dark:text-[#CFCFCF]"
         />
       ) : (

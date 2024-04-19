@@ -7,7 +7,7 @@ import Banner from './banner'
 import Menu from './menu'
 import Publish from './publish'
 import Invite from './invite'
-import { useDocumentById } from '@/hooks/use-document-by-id'
+import { useDocument } from '@/stores/use-document'
 
 interface NavbarProps {
   isCollapsed: boolean
@@ -15,8 +15,7 @@ interface NavbarProps {
 }
 
 const Navbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
-  const params = useParams()
-  const { document } = useDocumentById(params.documentId as string)
+  const { document } = useDocument()
 
   if (document === undefined) {
     return (

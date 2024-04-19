@@ -1,12 +1,13 @@
 'use client'
 
-import { update } from '@/api/document'
+import { getById, update } from '@/api/document'
 import Cover from '@/components/cover'
 import Toolbar from '@/components/toolbar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useDocumentById } from '@/hooks/use-document-by-id'
+import { useDocument } from '@/stores/use-document'
 import dynamic from 'next/dynamic'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 interface DocumentIdPageProps {
   params: {
@@ -19,13 +20,24 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     () => dynamic(() => import('@/components/editor'), { ssr: false }),
     []
   )
-  const { document } = useDocumentById(params.documentId)
+  const { document, onSetDocument } = useDocument()
+
+  useEffect(() => {
+    const fetchDocument = async () => {
+      const response = await getById(params.documentId)
+      const document = response.data
+      onSetDocument(document)
+    }
+    fetchDocument()
+  }, [onSetDocument, params.documentId])
 
   const onChange = async (content: string) => {
-    await update({
+    const response = await update({
       _id: params.documentId,
       content,
     })
+    const document = response.data
+    onSetDocument(document)
   }
   if (document === undefined) {
     return (
@@ -45,6 +57,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
   if (document === null) {
     return <div>Not found</div>
   }
+  // FIXME: data will disappear when we navigate to another page.
   return (
     <div className="pb-40">
       <Cover url={document.coverImage} />
