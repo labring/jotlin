@@ -1,24 +1,22 @@
-import cloud from "@lafjs/cloud"
-import { ObjectId } from "mongodb"
-
-const db = cloud.mongo.db
-
+import { ObjectId } from 'mongodb'
+import { db } from '@/lib'
 
 export default async function (ctx: FunctionContext, next: Function) {
-
   if (ctx.request.url.startsWith('/github-auth')) {
     return await next(ctx)
   }
-  
+
   // 获取数据库所有用户并检测是否有该用户
   if (ctx.user) {
     const objectId = new ObjectId(ctx.user.uid)
-    const userExist = await db.collection("users").find({_id:objectId}).toArray()
+    const userExist = await db
+      .collection('users')
+      .find({ _id: objectId })
+      .toArray()
 
-    if (userExist.length>0) {
+    if (userExist.length > 0) {
       return await next(ctx)
     }
-  
   }
 
   ctx.response.status(403).send('禁止访问')
