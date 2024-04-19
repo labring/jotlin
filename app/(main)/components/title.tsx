@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { useRef, useState } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Doc, update } from '@/api/document'
+import { useDocument } from '@/stores/use-document'
 
 interface TitleProps {
   initialData: Doc
@@ -14,6 +15,7 @@ const Title = ({ initialData }: TitleProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [title, setTitle] = useState(initialData.title || 'untitled')
   const [isEditing, setIsEditing] = useState(false)
+  const { onSetDocument } = useDocument()
 
   const enableInput = () => {
     setTitle(initialData.title as string)
@@ -23,15 +25,14 @@ const Title = ({ initialData }: TitleProps) => {
       inputRef.current?.setSelectionRange(0, inputRef.current.value.length)
     }, 0)
   }
-  const disableInput = () => {
+  const disableInput = async () => {
     setIsEditing(false)
-  }
-  const onChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value)
-    await update({
+    const response = await update({
       _id: initialData._id,
-      title: event.target.value || 'untitled',
+      title: title || 'untitled',
     })
+    const document = response.data
+    onSetDocument(document)
   }
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -48,7 +49,7 @@ const Title = ({ initialData }: TitleProps) => {
           ref={inputRef}
           onClick={enableInput}
           onBlur={disableInput}
-          onChange={onChange}
+          onChange={(e) => setTitle(e.target.value)}
           onKeyDown={onKeyDown}
           value={title}
           className="h-7 px-2 focus-visible:ring-transparent"

@@ -1,14 +1,16 @@
-export async function main(ctx: FunctionContext) {
+const setupWSConnection = require('@/utils').setupWSConnection
 
-  if (ctx.method === "WebSocket:connection") {
+export async function main(ctx: FunctionContext) {
+  if (ctx.method === 'WebSocket:connection') {
+    const conn = ctx.socket
+    console.log(ctx)
+    setupWSConnection(conn, ctx.request)
     ctx.socket.send('hi connection succeed')
   }
-
-  if (ctx.method === 'WebSocket:message') {
-    const { data } = ctx.params
-    console.log(data.toString())
-    ctx.socket.send("I have received your message");
-  }
+  // if (ctx.method === 'WebSocket:message') {
+  //   const { data } = ctx.params
+  //   ctx.socket.send(data.toString())
+  // }
 
   if (ctx.method === 'WebSocket:error') {
     const error = ctx.params

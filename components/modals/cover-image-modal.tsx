@@ -8,12 +8,14 @@ import { SingleImageDropzone } from '../single-image-dropzone'
 import { update } from '@/api/document'
 import { upload } from '@/api/image'
 import { mutate } from 'swr'
+import { useDocument } from '@/stores/use-document'
 
 const CoverImageModal = () => {
   const params = useParams()
   const coverImage = useCoverImage()
   const [file, setFile] = useState<File>()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { onSetDocument } = useDocument()
 
   const onClose = () => {
     setFile(undefined)
@@ -30,14 +32,12 @@ const CoverImageModal = () => {
         file,
         replaceTargetUrl: coverImage.url,
       })
-      await update({
+      const response = await update({
         _id: params.documentId as string,
         coverImage: res.data,
       })
-      mutate(
-        (key) =>
-          typeof key === 'string' && key.startsWith('/api/document/get-by-id')
-      )
+      const newDocument = response.data
+      onSetDocument(newDocument)
     }
     onClose()
   }

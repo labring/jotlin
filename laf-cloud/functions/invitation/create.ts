@@ -1,16 +1,15 @@
-import cloud, { FunctionContext } from '@lafjs/cloud'
+import { db } from '@/lib'
+import { FunctionContext } from '@lafjs/cloud'
 import { ObjectId } from 'mongodb'
 
-const db = cloud.mongo.db
-
 // schema
-interface Invitation{
-  documentId:ObjectId
-  userEmail:string
-  collaboratorEmail:string
-  isAccepted:boolean
-  isReplied:boolean
-  isValid:boolean
+interface Invitation {
+  documentId: ObjectId
+  userEmail: string
+  collaboratorEmail: string
+  isAccepted: boolean
+  isReplied: boolean
+  isValid: boolean
 }
 
 export default async function (ctx: FunctionContext) {
@@ -18,27 +17,29 @@ export default async function (ctx: FunctionContext) {
 
   const invitation = {
     ...invitationParams,
-    isAccepted:false,
-    isReplied:false,
-    isValid:true,
+    isAccepted: false,
+    isReplied: false,
+    isValid: true,
     created_at: new Date(),
   }
-  
+
   // if there is one invitation which is not replied
   const existingInvitation = await db.collection('invitations').findOne({
     ...invitationParams,
-    isValid:true,
-    isReplied:false
+    isValid: true,
+    isReplied: false,
   })
 
-  if(existingInvitation){
-    return {error:"Don't create same invitation repeatedly"}
+  if (existingInvitation) {
+    return { error: "Don't create same invitation repeatedly" }
   }
-  
-  const invitationNotice = await db.collection('invitations').insertOne(invitation)
 
-  if(!invitationNotice.acknowledged){
-    return {error:"Failed to create invitation."}
+  const invitationNotice = await db
+    .collection('invitations')
+    .insertOne(invitation)
+
+  if (!invitationNotice.acknowledged) {
+    return { error: 'Failed to create invitation.' }
   }
 
   return invitation

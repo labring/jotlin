@@ -1,7 +1,6 @@
-import cloud, { FunctionContext } from '@lafjs/cloud'
+import { db } from '@/lib'
+import { FunctionContext } from '@lafjs/cloud'
 import { ObjectId } from 'mongodb'
-
-const db = cloud.mongo.db
 
 export default async function (ctx: FunctionContext) {
   const documentId = ctx.query.id
@@ -9,25 +8,24 @@ export default async function (ctx: FunctionContext) {
 
   const objectId = new ObjectId(documentId)
 
-  const existingDocument = await db.collection("documents").findOne({
-  _id:objectId
-  })
-  
-  if (!existingDocument){
-    return {error:"Not found"}
-  }
-
-  if (existingDocument.userId!==userId){
-    return {error:"Unauthorized"}
-  }
-
-
-  const deleteNotice = await db.collection("documents").deleteOne({
-    _id: objectId
+  const existingDocument = await db.collection('documents').findOne({
+    _id: objectId,
   })
 
-  if(!deleteNotice.deletedCount){
-    return {error:"Failed to delete document "}
+  if (!existingDocument) {
+    return { error: 'Not found' }
+  }
+
+  if (existingDocument.userId !== userId) {
+    return { error: 'Unauthorized' }
+  }
+
+  const deleteNotice = await db.collection('documents').deleteOne({
+    _id: objectId,
+  })
+
+  if (!deleteNotice.deletedCount) {
+    return { error: 'Failed to delete document ' }
   }
 
   return existingDocument

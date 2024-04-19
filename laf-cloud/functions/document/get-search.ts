@@ -1,13 +1,15 @@
-import cloud from '@lafjs/cloud'
+import { db } from '@/lib'
 
-const db = cloud.mongo.db
 export default async function (ctx: FunctionContext) {
   const userId = ctx.user.uid
-  
-  const documents = await db.collection("documents").find({
-    userId,
-    isArchived:false
-  }).toArray()
+
+  const documents = await db
+    .collection('documents')
+    .find({
+      userId,
+      isArchived: false,
+    })
+    .toArray()
 
   return documents
 }

@@ -1,42 +1,46 @@
-import cloud, { FunctionContext } from '@lafjs/cloud'
+import { db } from '@/lib'
+import { FunctionContext } from '@lafjs/cloud'
 import { ObjectId } from 'mongodb'
 
-const db = cloud.mongo.db
-
 // schema
-interface Document{
-  title:string
-  userId:string
-  icon:string
-  isArchived:boolean
-  isPublished:boolean
-  collaborators:[string]
-  parentDocument?:ObjectId
-  content?:string
-  coverImage?:string 
+interface Document {
+  title: string
+  userId: string
+  icon: string
+  isArchived: boolean
+  isPublished: boolean
+  collaborators: [string]
+  parentDocument?: ObjectId
+  content?: string
+  coverImage?: string
 }
 
 export default async function (ctx: FunctionContext) {
-  
   const uid = ctx.user.uid
-  const {title,parentDocument} = ctx.body
+  const userInfo = await db.collection('users').findOne({
+    _id: new ObjectId(uid),
+  })
+
+  const userEmail = userInfo.emailAddress
+
+  const { title, parentDocument } = ctx.body
   const document = {
     title,
     parentDocument,
     userId: uid,
     isArchived: false,
     isPublished: false,
-    collaborators:[],
-    icon:'',
-    content:'',
-    coverImage:'',
+    collaborators: [userEmail],
+    icon: '',
+    content: '',
+    coverImage: '',
   }
 
   const documentCursor = await db.collection('documents').insertOne(document)
 
-  if(documentCursor.insertedId){
+  if (documentCursor.insertedId) {
     return documentCursor.insertedId.toString()
   }
 
-  return {error:"Failed to create new document." }
+  return { error: 'Failed to create new document.' }
 }

@@ -1,16 +1,11 @@
-import cloud, { FunctionContext } from '@lafjs/cloud'
-import { ObjectId } from 'mongodb'
-
-const db = cloud.mongo.db
-
+import { db } from '@/lib'
+import { FunctionContext } from '@lafjs/cloud'
 
 export default async function (ctx: FunctionContext) {
-  
   const email = ctx.query.email
-  
 
   const userInfo = await db.collection('users').findOne({
-    emailAddress:email
+    emailAddress: email,
   })
 
   return userInfo
