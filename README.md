@@ -30,7 +30,7 @@ NextJS + Shadcn-UI + BlockNote + Laf
    - [ ] meta information support
 2. Advanced editor capabilities
    - [ ] notion like database
-   - [ ] templa
+   - [ ] template
 3. LLM integration
    1. [FastGPT](https://github.com/labring/FastGPT) integration
       1. [ ] Knowledge base support
