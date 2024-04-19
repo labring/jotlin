@@ -51,8 +51,8 @@ export default async function (ctx: FunctionContext) {
           },
         }
       )
-      // FIXME: recursive error
-      await recursiveRemove(child._id)
+      const stringId = child._id.toString()
+      await recursiveRemove(stringId)
     }
   }
 

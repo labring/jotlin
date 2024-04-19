@@ -57,8 +57,8 @@ export default async function (ctx: FunctionContext) {
           },
         }
       )
-      // FIXME: recursive error
-      await recursiveUpdate(child._id)
+      const stringId = child._id.toString()
+      await recursiveUpdate(stringId)
     }
   }
 
