@@ -5,21 +5,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const getRandomColor = () => {
-  const colors = [
-    '#FF0000',
-    '#00FF00',
-    '#0000FF',
-    '#FFFF00',
-    '#FF00FF',
-    '#00FFFF',
-    '#FFA500',
-    '#800080',
-    '#008000',
-    '#000080',
-    '#800000',
-    '#008080',
-  ]
-  const randomIndex = Math.floor(Math.random() * colors.length)
-  return colors[randomIndex]
+export const getRandomLightColor = () => {
+  const r = Math.floor(Math.random() * 128 + 127)
+  const g = Math.floor(Math.random() * 128 + 127)
+  const b = Math.floor(Math.random() * 128 + 127)
+
+  const color = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
+
+  return color
 }
