@@ -64,36 +64,40 @@ const Editor = ({
   }, [])
 
   // collaboration
-  const provider = useMemo(() => {
-    if (!documentId) {
-      return null
-    }
+  // const provider = useMemo(() => {
+  //   if (!documentId) {
+  //     return null
+  //   }
 
-    const newProvider = new WebsocketProvider(
-      'ws://localhost:1234',
-      documentId,
-      doc
-    )
+  //   const newProvider = new WebsocketProvider(
+  //     process.env.NEXT_PUBLIC_WS_URL!,
+  //     documentId,
+  //     doc
+  //   )
 
-    newProvider.on('status', (event: any) => {
-      console.log(event.status) // logs "connected" or "disconnected"
-    })
+  //   newProvider.on('connection-error', (event: any) => {
+  //     console.log(event)
+  //     newProvider.destroy()
+  //   })
+  //   newProvider.on('status', (event: any) => {
+  //     console.log(event)
+  //   })
 
-    return newProvider
-  }, [doc, documentId])
+  //   return newProvider
+  // }, [doc, documentId])
 
   const editor = useCreateBlockNote({
     schema: blockSchema,
     initialContent: initialContent ? JSON.parse(initialContent) : undefined,
     uploadFile: handleUpload,
-    collaboration: {
-      provider,
-      fragment: doc.getXmlFragment('document-store'),
-      user: {
-        name: user?.username as string,
-        color: getRandomColor(),
-      },
-    },
+    // collaboration: {
+    //   provider,
+    //   fragment: doc.getXmlFragment('document-store'),
+    //   user: {
+    //     name: user?.username as string,
+    //     color: getRandomColor(),
+    //   },
+    // },
   })
 
   // FIXME: 粘贴大量markdown文本时会出现粘贴两次的情况

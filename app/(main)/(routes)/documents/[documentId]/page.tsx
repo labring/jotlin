@@ -4,10 +4,10 @@ import { getById, update } from '@/api/document'
 import Cover from '@/components/cover'
 import Toolbar from '@/components/toolbar'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useDocumentById } from '@/hooks/use-document-by-id'
 import { useDocument } from '@/stores/use-document'
 import dynamic from 'next/dynamic'
 import { useEffect, useMemo } from 'react'
+import { debounce } from 'lodash'
 
 interface DocumentIdPageProps {
   params: {
@@ -36,9 +36,13 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
       _id: params.documentId,
       content,
     })
+    console.log('response', response)
     const document = response.data
     onSetDocument(document)
   }
+
+  const debounceOnChange = debounce(onChange, 1000)
+
   if (document === undefined) {
     return (
       <div>
@@ -64,7 +68,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
       <div className="mx-auto md:max-w-3xl lg:max-w-4xl">
         <Toolbar initialData={document} />
         <Editor
-          onChange={onChange}
+          onChange={debounceOnChange}
           initialContent={document.content}
           documentId={params.documentId}
         />

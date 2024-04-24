@@ -29,6 +29,7 @@
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "emoji-picker-react": "^4.5.16",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.350.0",
     "marked": "^12.0.1",
     "next": "14.0.3",
@@ -51,6 +52,7 @@
     "zustand": "^4.4.6"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.0",
     "@types/node": "^20",
     "@types/prismjs": "^1.26.3",
     "@types/react": "^18",
