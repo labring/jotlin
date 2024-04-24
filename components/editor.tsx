@@ -15,31 +15,13 @@ import { useSession } from '@/hooks/use-session'
 import { blockSchema, getCustomSlashMenuItems } from './editor-blocks'
 import { filterSuggestionItems } from '@blocknote/core'
 import { marked } from 'marked'
+import { getRandomColor } from '@/lib/utils'
 
 interface EditorProps {
   onChange: (value: string) => void
   initialContent?: string
   editable?: boolean
   documentId?: string
-}
-
-const getRandomColor = () => {
-  const colors = [
-    '#FF0000',
-    '#00FF00',
-    '#0000FF',
-    '#FFFF00',
-    '#FF00FF',
-    '#00FFFF',
-    '#FFA500',
-    '#800080',
-    '#008000',
-    '#000080',
-    '#800000',
-    '#008080',
-  ]
-  const randomIndex = Math.floor(Math.random() * colors.length)
-  return colors[randomIndex]
 }
 
 const Editor = ({
@@ -58,7 +40,6 @@ const Editor = ({
     return response.data
   }, [])
 
-  // 创建一个 ref 来存储 Y.Doc 实例
   const docRef = useRef<Y.Doc | null>(null)
   if (!docRef.current) {
     docRef.current = new Y.Doc()
@@ -66,7 +47,6 @@ const Editor = ({
   }
   const doc = docRef.current
 
-  // 创建一个 ref 来存储 WebrtcProvider 实例
   const providerRef = useRef<WebrtcProvider | null>(null)
   if (!providerRef.current && documentId) {
     providerRef.current = new WebrtcProvider(documentId, doc, {
