@@ -3,12 +3,12 @@ import { mutate } from 'swr'
 import { create } from 'zustand'
 
 type DocumentStore = {
-  document: Doc | null
+  document: Doc | undefined
   onSetDocument: (doc: Doc) => void
 }
 
 export const useDocument = create<DocumentStore>((set) => ({
-  document: null,
+  document: undefined,
   onSetDocument: (doc) => {
     set({ document: doc }),
       mutate(

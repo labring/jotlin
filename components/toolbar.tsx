@@ -7,7 +7,6 @@ import { ElementRef, useRef, useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { useCoverImage } from '@/stores/use-cover-image'
 import { Doc, removeIcon, update } from '@/api/document'
-import { mutate } from 'swr'
 import { useDocument } from '@/stores/use-document'
 
 interface ToolbarProps {
@@ -19,7 +18,7 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   const inputRef = useRef<ElementRef<'textarea'>>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [value, setValue] = useState(initialData.title)
-  const { document, onSetDocument } = useDocument()
+  const { onSetDocument } = useDocument()
 
   const coverImage = useCoverImage()
   const enableInput = () => {

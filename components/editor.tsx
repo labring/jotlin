@@ -6,47 +6,31 @@ import {
   SuggestionMenuController,
 } from '@blocknote/react'
 import { useTheme } from 'next-themes'
-import * as Y from 'yjs'
-import { WebsocketProvider } from 'y-websocket'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect } from 'react'
 import '@blocknote/react/style.css'
 import { upload } from '@/api/image'
 import { useSession } from '@/hooks/use-session'
 import { blockSchema, getCustomSlashMenuItems } from './editor-blocks'
 import { filterSuggestionItems } from '@blocknote/core'
 import { marked } from 'marked'
+import { getRandomLightColor } from '@/lib/utils'
+import { WebrtcProvider } from 'y-webrtc'
+import * as Y from 'yjs'
 
 interface EditorProps {
   onChange: (value: string) => void
   initialContent?: string
+  webrtcProvider?: WebrtcProvider
+  ydoc?: Y.Doc
   editable?: boolean
-  documentId?: string
-}
-
-const getRandomColor = () => {
-  const colors = [
-    '#FF0000',
-    '#00FF00',
-    '#0000FF',
-    '#FFFF00',
-    '#FF00FF',
-    '#00FFFF',
-    '#FFA500',
-    '#800080',
-    '#008000',
-    '#000080',
-    '#800000',
-    '#008080',
-  ]
-  const randomIndex = Math.floor(Math.random() * colors.length)
-  return colors[randomIndex]
 }
 
 const Editor = ({
   onChange,
   initialContent,
   editable,
-  documentId,
+  webrtcProvider,
+  ydoc,
 }: EditorProps) => {
   const { resolvedTheme } = useTheme()
   const { user } = useSession()
@@ -55,45 +39,24 @@ const Editor = ({
     const response = await upload({
       file,
     })
-    console.log(response)
     return response.data
   }, [])
-
-  const doc = useMemo(() => {
-    return new Y.Doc()
-  }, [])
-
-  // collaboration
-  const provider = useMemo(() => {
-    if (!documentId) {
-      return null
-    }
-
-    const newProvider = new WebsocketProvider(
-      'ws://localhost:1234',
-      documentId,
-      doc
-    )
-
-    newProvider.on('status', (event: any) => {
-      console.log(event.status) // logs "connected" or "disconnected"
-    })
-
-    return newProvider
-  }, [doc, documentId])
 
   const editor = useCreateBlockNote({
     schema: blockSchema,
     initialContent: initialContent ? JSON.parse(initialContent) : undefined,
     uploadFile: handleUpload,
-    collaboration: {
-      provider,
-      fragment: doc.getXmlFragment('document-store'),
-      user: {
-        name: user?.username as string,
-        color: getRandomColor(),
-      },
-    },
+    collaboration:
+      webrtcProvider && ydoc
+        ? {
+            provider: webrtcProvider,
+            fragment: ydoc.getXmlFragment('document-store'),
+            user: {
+              name: user?.username as string,
+              color: getRandomLightColor(),
+            },
+          }
+        : undefined,
   })
 
   // FIXME: 粘贴大量markdown文本时会出现粘贴两次的情况
