@@ -7,8 +7,8 @@ import {
 } from '@blocknote/react'
 import { useTheme } from 'next-themes'
 import * as Y from 'yjs'
-import { WebsocketProvider } from 'y-websocket'
-import { useCallback, useEffect, useMemo } from 'react'
+import { WebrtcProvider } from 'y-webrtc'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import '@blocknote/react/style.css'
 import { upload } from '@/api/image'
 import { useSession } from '@/hooks/use-session'
@@ -55,49 +55,38 @@ const Editor = ({
     const response = await upload({
       file,
     })
-    console.log(response)
     return response.data
   }, [])
 
-  const doc = useMemo(() => {
-    return new Y.Doc()
-  }, [])
+  // 创建一个 ref 来存储 Y.Doc 实例
+  const docRef = useRef<Y.Doc | null>(null)
+  if (!docRef.current) {
+    docRef.current = new Y.Doc()
+    docRef.current.getArray('content').insert(0, [initialContent])
+  }
+  const doc = docRef.current
 
-  // collaboration
-  // const provider = useMemo(() => {
-  //   if (!documentId) {
-  //     return null
-  //   }
-
-  //   const newProvider = new WebsocketProvider(
-  //     process.env.NEXT_PUBLIC_WS_URL!,
-  //     documentId,
-  //     doc
-  //   )
-
-  //   newProvider.on('connection-error', (event: any) => {
-  //     console.log(event)
-  //     newProvider.destroy()
-  //   })
-  //   newProvider.on('status', (event: any) => {
-  //     console.log(event)
-  //   })
-
-  //   return newProvider
-  // }, [doc, documentId])
+  // 创建一个 ref 来存储 WebrtcProvider 实例
+  const providerRef = useRef<WebrtcProvider | null>(null)
+  if (!providerRef.current && documentId) {
+    providerRef.current = new WebrtcProvider(documentId, doc, {
+      signaling: [process.env.NEXT_PUBLIC_WS_URL!],
+    })
+  }
+  const provider = providerRef.current
 
   const editor = useCreateBlockNote({
     schema: blockSchema,
     initialContent: initialContent ? JSON.parse(initialContent) : undefined,
     uploadFile: handleUpload,
-    // collaboration: {
-    //   provider,
-    //   fragment: doc.getXmlFragment('document-store'),
-    //   user: {
-    //     name: user?.username as string,
-    //     color: getRandomColor(),
-    //   },
-    // },
+    collaboration: {
+      provider,
+      fragment: doc.getXmlFragment('document-store'),
+      user: {
+        name: user?.username as string,
+        color: getRandomColor(),
+      },
+    },
   })
 
   // FIXME: 粘贴大量markdown文本时会出现粘贴两次的情况

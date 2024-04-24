@@ -46,7 +46,7 @@
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
     "usehooks-ts": "^2.15.1",
-    "y-websocket": "^1.5.4",
+    "y-webrtc": "^10.3.0",
     "yjs": "^13.6.11",
     "zod": "^3.22.4",
     "zustand": "^4.4.6"
