@@ -78,6 +78,7 @@ const DocumentList = ({
       {documents.map((document: Doc) => (
         <div key={document._id}>
           <Item
+            type={type}
             id={document._id}
             onClick={() => onRedirect(document._id)}
             label={document.title as string}
