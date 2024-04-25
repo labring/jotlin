@@ -1,14 +1,13 @@
 'use client'
 
-import useSWR from 'swr'
 import { useState } from 'react'
 import { FileIcon } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 
 import Item from './item'
-import axios from '@/lib/axios'
 import { cn } from '@/lib/utils'
 import { Doc } from '@/api/document'
+import { useSidebar } from '@/hooks/use-sidebar'
 
 interface DocumentListProps {
   parentDocumentId?: string
@@ -36,12 +35,7 @@ const DocumentList = ({
 
   parentDocumentId = parentDocumentId ? parentDocumentId : ''
 
-  const fetcher = (url: string) => axios.get(url).then((res) => res.data)
-
-  const { data: documents } = useSWR(
-    `/api/document/sidebar?parentDocument=${parentDocumentId}&type=${type}`,
-    fetcher
-  )
+  const { documents } = useSidebar(parentDocumentId, type)
 
   // function: 点击重定向到文档详情页
   const onRedirect = (documentId: string) => {

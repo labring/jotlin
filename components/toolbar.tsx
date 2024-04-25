@@ -1,5 +1,6 @@
 'use client'
 
+import { mutate } from 'swr'
 import { ImageIcon, Smile, X } from 'lucide-react'
 import { ElementRef, useRef, useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
@@ -8,18 +9,16 @@ import { Button } from './ui/button'
 import IconPicker from './icon-picker'
 import { useDocument } from '@/stores/use-document'
 import { useCoverImage } from '@/stores/use-cover-image'
-import { Doc, removeIcon, update } from '@/api/document'
+import { removeIcon, update } from '@/api/document'
 
 interface ToolbarProps {
-  initialData: Doc
   preview?: boolean
 }
 
-const Toolbar = ({ initialData, preview }: ToolbarProps) => {
+const Toolbar = ({ preview }: ToolbarProps) => {
   const inputRef = useRef<ElementRef<'textarea'>>(null)
   const [isEditing, setIsEditing] = useState(false)
-  const [value, setValue] = useState(initialData.title)
-  const { onSetDocument } = useDocument()
+  const { document, onSetDocument } = useDocument()
 
   const coverImage = useCoverImage()
   const enableInput = () => {
@@ -27,7 +26,6 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
     setIsEditing(true)
 
     setTimeout(() => {
-      setValue(initialData.title)
       inputRef.current?.focus()
     }, 0)
   }
@@ -35,11 +33,15 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   const disableInput = async () => {
     setIsEditing(false)
     const response = await update({
-      _id: initialData._id,
-      title: value || 'Untitled',
+      _id: document?._id!,
+      title: document?.title || 'Untitled',
     })
     const newDocument = response.data
     onSetDocument(newDocument)
+    mutate(
+      (key) =>
+        typeof key === 'string' && key.startsWith('/api/document/sidebar')
+    )
   }
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -50,7 +52,7 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   }
   const onIconSelect = async (icon: string) => {
     const response = await update({
-      _id: initialData._id,
+      _id: document?._id!,
       icon,
     })
     const newDocument = response.data
@@ -58,19 +60,19 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   }
 
   const onRemoveIcon = async () => {
-    const response = await removeIcon(initialData._id)
+    const response = await removeIcon(document?._id!)
     const newDocument = response.data
     onSetDocument(newDocument)
   }
 
   return (
     <div className="group relative pl-[54px]">
-      {!!initialData.icon && !preview && (
+      {!!document?.icon && !preview && (
         <div className="group/icon flex items-center gap-x-2 pt-6">
           <IconPicker onChange={onIconSelect}>
             {/* FIXME:浏览器无法正确渲染emoji */}
             <p className="text-6xl transition hover:opacity-75">
-              {initialData.icon}
+              {document?.icon}
             </p>
           </IconPicker>
           <Button
@@ -82,11 +84,11 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
           </Button>
         </div>
       )}
-      {!!initialData.icon && preview && (
-        <p className="pt-6 text-6xl">{initialData.icon}</p>
+      {!!document?.icon && preview && (
+        <p className="pt-6 text-6xl">{document?.icon}</p>
       )}
       <div className="flex items-center gap-x-1 py-4 opacity-0 group-hover:opacity-100">
-        {!initialData.icon && !preview && (
+        {!document?.icon && !preview && (
           <IconPicker asChild onChange={onIconSelect}>
             <Button
               className="text-xs text-muted-foreground"
@@ -97,7 +99,7 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
             </Button>
           </IconPicker>
         )}
-        {!initialData.coverImage && !preview && (
+        {!document?.coverImage && !preview && (
           <Button
             onClick={coverImage.onOpen}
             className="text-xs text-muted-foreground"
@@ -113,15 +115,17 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
           ref={inputRef}
           onBlur={disableInput}
           onKeyDown={onKeyDown}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={document?.title}
+          onChange={(e) =>
+            onSetDocument({ ...document!, title: e.target.value })
+          }
           className="resize-none break-words bg-transparent text-5xl font-bold text-[#3F3F3F] outline-none dark:text-[#CFCFCF]"
         />
       ) : (
         <div
           onClick={enableInput}
           className="break-words pb-[11.5px] text-5xl font-bold text-[#3F3F3F] outline-none dark:text-[#CFCFCF]">
-          {value}
+          {document?.title}
         </div>
       )}
     </div>
