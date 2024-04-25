@@ -1,7 +1,7 @@
 'use client'
 
 import { debounce } from 'lodash'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import Cover from '@/components/cover'
 import Toolbar from '@/components/toolbar'
@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { EditorWrapper } from '@/components/editor/editor-wrapper'
 
 import { useDocument } from '@/stores/use-document'
-import { Doc, getById, update } from '@/api/document'
+import { getById, update } from '@/api/document'
 
 interface DocumentIdPageProps {
   params: {
@@ -18,9 +18,7 @@ interface DocumentIdPageProps {
 }
 
 const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
-  const { onSetDocument } = useDocument()
-  const [document, setDocument] = useState<Doc>()
-
+  const { document, onSetDocument } = useDocument()
   const onChange = async (content: string) => {
     await update({
       _id: params.documentId,
@@ -34,13 +32,11 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     const fetchDocument = async () => {
       const response = await getById(params.documentId)
       const document = response.data
-      console.log('fetchDocument', document)
       onSetDocument(document)
-      setDocument(document)
     }
 
     fetchDocument()
-  }, [])
+  }, [params.documentId])
 
   if (document === undefined) {
     return (
@@ -62,12 +58,11 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
     return <div>Not found</div>
   }
 
-  // FIXME: data will disappear when we navigate to another page.
   return (
     <div className="pb-40">
       <Cover url={document.coverImage} />
       <div className="mx-auto md:max-w-3xl lg:max-w-4xl">
-        <Toolbar initialData={document} />
+        <Toolbar />
         <EditorWrapper
           onChange={debounceOnChange}
           documentId={params.documentId}
