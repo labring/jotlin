@@ -1,6 +1,7 @@
-import { Doc } from '@/api/document'
 import { mutate } from 'swr'
 import { create } from 'zustand'
+
+import { Doc } from '@/api/document'
 
 type DocumentStore = {
   document: Doc | undefined

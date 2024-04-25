@@ -1,14 +1,16 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import Image from 'next/image'
-import { Button } from './ui/button'
 import { ImageIcon, X } from 'lucide-react'
-import { useCoverImage } from '@/stores/use-cover-image'
 import { useParams } from 'next/navigation'
+
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { removeCoverImage } from '@/api/document'
+
+import { cn } from '@/lib/utils'
 import { deleteImage } from '@/api/image'
+import { removeCoverImage } from '@/api/document'
+import { useCoverImage } from '@/stores/use-cover-image'
 
 interface CoverImageProps {
   url?: string

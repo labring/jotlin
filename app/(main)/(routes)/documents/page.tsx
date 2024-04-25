@@ -1,13 +1,14 @@
 'use client'
 
+import { mutate } from 'swr'
+import Image from 'next/image'
+import { toast } from 'sonner'
+import { PlusCircle } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+
 import { create } from '@/api/document'
 import { Button } from '@/components/ui/button'
 import { useSession } from '@/hooks/use-session'
-import { PlusCircle } from 'lucide-react'
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
-import { mutate } from 'swr'
 
 const DocumentsPage = () => {
   const router = useRouter()

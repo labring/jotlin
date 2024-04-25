@@ -1,13 +1,14 @@
 'use client'
 
-import IconPicker from './icon-picker'
 import { ImageIcon, Smile, X } from 'lucide-react'
-import { Button } from './ui/button'
 import { ElementRef, useRef, useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
+
+import { Button } from './ui/button'
+import IconPicker from './icon-picker'
+import { useDocument } from '@/stores/use-document'
 import { useCoverImage } from '@/stores/use-cover-image'
 import { Doc, removeIcon, update } from '@/api/document'
-import { useDocument } from '@/stores/use-document'
 
 interface ToolbarProps {
   initialData: Doc

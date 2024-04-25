@@ -1,6 +1,7 @@
-import { Doc } from '@/api/document'
-import axios from '@/lib/axios'
 import useSWR from 'swr'
+
+import axios from '@/lib/axios'
+import { Doc } from '@/api/document'
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 

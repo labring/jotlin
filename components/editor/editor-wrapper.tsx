@@ -1,8 +1,8 @@
 'use client'
 
 import * as Y from 'yjs'
-import { WebrtcProvider } from 'y-webrtc'
 import dynamic from 'next/dynamic'
+import { WebrtcProvider } from 'y-webrtc'
 import { useEffect, useMemo, useState } from 'react'
 
 interface EditorWrapperProps {
@@ -19,7 +19,7 @@ export const EditorWrapper = ({
   isShared,
 }: EditorWrapperProps) => {
   const Editor = useMemo(
-    () => dynamic(() => import('@/components/editor'), { ssr: false }),
+    () => dynamic(() => import('@/components/editor/editor'), { ssr: false }),
     []
   )
   const [ydoc, setYdoc] = useState<Y.Doc>()

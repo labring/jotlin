@@ -1,16 +1,8 @@
 'use client'
 
-import { archive, create } from '@/api/document'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Skeleton } from '@/components/ui/skeleton'
-import { useSession } from '@/hooks/use-session'
-import { cn } from '@/lib/utils'
-import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu'
+import { mutate } from 'swr'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 import {
   ChevronDown,
   ChevronRight,
@@ -19,9 +11,19 @@ import {
   Plus,
   Trash,
 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
-import { mutate } from 'swr'
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Skeleton } from '@/components/ui/skeleton'
+
+import { cn } from '@/lib/utils'
+import { useSession } from '@/hooks/use-session'
+import { archive, create } from '@/api/document'
 
 interface ItemProps {
   id?: string

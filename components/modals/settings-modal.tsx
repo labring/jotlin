@@ -1,7 +1,9 @@
-import { useSettings } from '@/stores/use-settings'
-import { Dialog, DialogContent, DialogHeader } from '../ui/dialog'
 import { Label } from '@/components/ui/label'
+import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
+
 import { ModeToggle } from '../mode-toggle'
+
+import { useSettings } from '@/stores/use-settings'
 
 const SettingsModal = () => {
   const settings = useSettings()

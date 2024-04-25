@@ -1,6 +1,9 @@
 'use client'
 
-import { Doc, update } from '@/api/document'
+import { toast } from 'sonner'
+import { useState } from 'react'
+import { Check, Copy, Globe } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import {
   Popover,
@@ -8,10 +11,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 
+import { Doc, update } from '@/api/document'
 import { useOrigin } from '@/hooks/use-origin'
-import { Check, Copy, Globe } from 'lucide-react'
-import { useState } from 'react'
-import { toast } from 'sonner'
 
 interface PublishProps {
   initialData: Doc
@@ -29,7 +30,7 @@ const Publish = ({ initialData }: PublishProps) => {
     setIsSubmitting(true)
     try {
       toast.loading('Publishing...')
-      const response = await update({
+      await update({
         _id: initialData._id,
         isPublished: true,
       }).finally(() => setIsSubmitting(false))
@@ -43,7 +44,7 @@ const Publish = ({ initialData }: PublishProps) => {
     setIsSubmitting(true)
     try {
       toast.loading('Unpublishing...')
-      const promise = await update({
+      await update({
         _id: initialData._id,
         isPublished: false,
       }).finally(() => setIsSubmitting(false))

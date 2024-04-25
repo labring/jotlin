@@ -1,13 +1,14 @@
 'use client'
 
-import { Spinner } from '@/components/spinner'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import InviteItem from './invite-item'
-import { useEffect, useState } from 'react'
-import { useSession } from '@/hooks/use-session'
-import { Invitation, getByEmail } from '@/api/invitation'
 import useSWR from 'swr'
 import axios from 'axios'
+
+import { Invitation } from '@/api/invitation'
+import { useSession } from '@/hooks/use-session'
+import { Spinner } from '@/components/spinner'
+import { ScrollArea } from '@/components/ui/scroll-area'
+
+import InviteItem from './invite-item'
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data)
 

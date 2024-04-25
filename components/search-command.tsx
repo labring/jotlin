@@ -1,10 +1,10 @@
 'use client'
 
-import { useSearch } from '@/stores/use-search'
+import useSWR from 'swr'
 import { File } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useSession } from '@/hooks/use-session'
 import { useState, useEffect } from 'react'
+
 import {
   CommandDialog,
   CommandEmpty,
@@ -12,10 +12,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from './ui/command'
-import { Doc } from '@/api/document'
+} from '@/components/ui/command'
+
 import axios from '@/lib/axios'
-import useSWR from 'swr'
+import { Doc } from '@/api/document'
+import { useSearch } from '@/stores/use-search'
+import { useSession } from '@/hooks/use-session'
 
 export const SearchCommand = () => {
   const { user } = useSession()

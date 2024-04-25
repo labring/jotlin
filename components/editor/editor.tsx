@@ -5,17 +5,19 @@ import {
   useCreateBlockNote,
   SuggestionMenuController,
 } from '@blocknote/react'
+import * as Y from 'yjs'
+import { marked } from 'marked'
 import { useTheme } from 'next-themes'
+import { WebrtcProvider } from 'y-webrtc'
 import { useCallback, useEffect } from 'react'
+import { filterSuggestionItems } from '@blocknote/core'
+
 import '@blocknote/react/style.css'
+
 import { upload } from '@/api/image'
 import { useSession } from '@/hooks/use-session'
-import { blockSchema, getCustomSlashMenuItems } from './editor-blocks'
-import { filterSuggestionItems } from '@blocknote/core'
-import { marked } from 'marked'
 import { getRandomLightColor } from '@/lib/utils'
-import { WebrtcProvider } from 'y-webrtc'
-import * as Y from 'yjs'
+import { blockSchema, getCustomSlashMenuItems } from './editor-blocks'
 
 interface EditorProps {
   onChange: (value: string) => void

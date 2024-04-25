@@ -1,7 +1,7 @@
 'use client'
 
 import { ChevronsLeftRight } from 'lucide-react'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,8 +9,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useSession } from '@/hooks/use-session'
 import { Button } from '@/components/ui/button'
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
+
+import { useSession } from '@/hooks/use-session'
 
 const UserItem = () => {
   const { user, signOut } = useSession()

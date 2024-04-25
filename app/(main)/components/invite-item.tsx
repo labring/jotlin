@@ -1,16 +1,18 @@
 'use client'
 
+import { mutate } from 'swr'
+import { useEffect, useState } from 'react'
+import { FileIcon } from 'lucide-react'
+
+import { Spinner } from '@/components/spinner'
+import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
-import { FileIcon } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Doc, getBasicInfoById } from '@/api/document'
-import { useEffect, useState } from 'react'
+
 import { useSession } from '@/hooks/use-session'
+import { Doc, getBasicInfoById } from '@/api/document'
 import { User, getUserInfoByEmail } from '@/api/user'
 import { Invitation, update } from '@/api/invitation'
-import { mutate } from 'swr'
-import { Spinner } from '@/components/spinner'
 
 type DocumentInfo = Pick<Doc, 'title' | 'icon'>
 type UserInfo = Pick<User, 'username' | 'imageUrl'>
