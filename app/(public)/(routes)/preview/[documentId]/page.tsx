@@ -1,12 +1,14 @@
 'use client'
 
-import { update } from '@/api/document'
+import { useMemo } from 'react'
+import dynamic from 'next/dynamic'
+
 import Cover from '@/components/cover'
 import Toolbar from '@/components/toolbar'
 import { Skeleton } from '@/components/ui/skeleton'
+
+import { update } from '@/api/document'
 import { useDocumentById } from '@/hooks/use-document-by-id'
-import dynamic from 'next/dynamic'
-import { useMemo } from 'react'
 
 interface DocumentIdPageProps {
   params: {
@@ -14,11 +16,9 @@ interface DocumentIdPageProps {
   }
 }
 
-//TODO: change Document to Doc
-
 const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
   const Editor = useMemo(
-    () => dynamic(() => import('@/components/editor'), { ssr: false }),
+    () => dynamic(() => import('@/components/editor/editor'), { ssr: false }),
     []
   )
   const { document } = useDocumentById(params.documentId)

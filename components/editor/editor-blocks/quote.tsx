@@ -1,5 +1,6 @@
-import { createReactBlockSpec } from '@blocknote/react'
 import { TbBlockquote } from 'react-icons/tb'
+import { createReactBlockSpec } from '@blocknote/react'
+
 import { blockSchema } from './index'
 
 const BlockQuoteBlock = createReactBlockSpec(

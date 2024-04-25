@@ -1,16 +1,17 @@
 'use client'
 
-import { removeAccess } from '@/api/document'
-import { Spinner } from '@/components/spinner'
-import { Avatar } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { useSession } from '@/hooks/use-session'
-import { AvatarImage } from '@radix-ui/react-avatar'
-import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
-import { Doc } from '@/api/document'
-import { useUserInfo } from '@/hooks/use-user-info'
 import { mutate } from 'swr'
+import { toast } from 'sonner'
+import { useState } from 'react'
+
+import { Spinner } from '@/components/spinner'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
+
+import { Doc } from '@/api/document'
+import { removeAccess } from '@/api/document'
+import { useSession } from '@/hooks/use-session'
+import { useUserInfo } from '@/hooks/use-user-info'
 
 interface InviteUserProps {
   collaborator: string

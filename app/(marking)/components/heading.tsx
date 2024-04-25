@@ -1,12 +1,14 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
-import { Spinner } from '@/components/spinner'
 import Link from 'next/link'
-import { useAuth } from '@/stores/use-auth'
-import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { ArrowRight } from 'lucide-react'
+import { useSearchParams, useRouter } from 'next/navigation'
+
+import { Spinner } from '@/components/spinner'
+import { Button } from '@/components/ui/button'
+
+import { useAuth } from '@/stores/use-auth'
 import { useSession } from '@/hooks/use-session'
 
 const Heading = () => {

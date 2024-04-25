@@ -1,18 +1,20 @@
+import { Github } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-} from '../ui/dialog'
+} from '@/components/ui/dialog'
+
 import { useAuth } from '@/stores/use-auth'
-import AuthSocialButton from '../buttons/auth-social-button'
-import { Github } from 'lucide-react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import AuthSocialButton from '@/components/buttons/auth-social-button'
 
 const SettingsModal = () => {
   const authModal = useAuth()
   const router = useRouter()
-  // redirect to github.com
+
   const socialLogin = (platform: string) => {
     if (platform === 'github') {
       router.push(
@@ -20,6 +22,7 @@ const SettingsModal = () => {
       )
     }
   }
+
   return (
     <Dialog open={authModal.isOpen} onOpenChange={authModal.onClose}>
       <DialogContent className="w-96">

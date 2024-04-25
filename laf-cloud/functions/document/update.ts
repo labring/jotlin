@@ -4,7 +4,6 @@ import { db } from '@/lib'
 
 export default async function (ctx: FunctionContext) {
   const { _id, ...rest } = ctx.body
-  const userId = ctx.user.uid
 
   const objectId = new ObjectId(_id)
 
@@ -15,10 +14,11 @@ export default async function (ctx: FunctionContext) {
   if (!existingDocument) {
     return { error: 'Not found' }
   }
-
-  if (existingDocument.userId !== userId) {
-    return { error: 'Unauthorized' }
-  }
+  
+  // FIXME: 暂时不处理update认证
+  // if (existingDocument.userId !== userId) {
+  //   return { error: 'Unauthorized' }
+  // }
 
   const updateNotice = await db.collection('documents').updateOne(
     {

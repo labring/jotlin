@@ -1,10 +1,12 @@
 'use client'
 
-import { Spinner } from '@/components/spinner'
 import { redirect } from 'next/navigation'
-import Navigation from './components/navigation'
+
+import { Spinner } from '@/components/spinner'
 import { SearchCommand } from '@/components/search-command'
+
 import { useSession } from '@/hooks/use-session'
+import Navigation from './components/navigation'
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useSession()

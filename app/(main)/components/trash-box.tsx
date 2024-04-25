@@ -1,15 +1,17 @@
 'use client'
 
-import { remove, restore, Doc } from '@/api/document'
-import ConfirmModal from '@/components/modals/confirm-modal'
-import { Spinner } from '@/components/spinner'
-import { Input } from '@/components/ui/input'
-import axios from '@/lib/axios'
+import useSWR from 'swr'
+import { toast } from 'sonner'
+import { useState } from 'react'
 import { Search, Trash, Undo } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { toast } from 'sonner'
-import useSWR from 'swr'
+
+import { Input } from '@/components/ui/input'
+import { Spinner } from '@/components/spinner'
+import ConfirmModal from '@/components/modals/confirm-modal'
+
+import axios from '@/lib/axios'
+import { remove, restore, Doc } from '@/api/document'
 
 const TrashBox = () => {
   const router = useRouter()

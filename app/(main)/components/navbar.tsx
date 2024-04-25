@@ -1,12 +1,12 @@
 'use client'
 
-import { useParams } from 'next/navigation'
 import { MenuIcon } from 'lucide-react'
+
+import Menu from './menu'
 import Title from './title'
 import Banner from './banner'
-import Menu from './menu'
-import Publish from './publish'
 import Invite from './invite'
+import Publish from './publish'
 import { useDocument } from '@/stores/use-document'
 
 interface NavbarProps {

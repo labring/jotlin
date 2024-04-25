@@ -1,4 +1,3 @@
-import { cn } from '@/lib/utils'
 import {
   ChevronsLeft,
   MenuIcon,
@@ -9,24 +8,27 @@ import {
   Trash,
   Inbox,
 } from 'lucide-react'
-import { useParams, usePathname, useRouter } from 'next/navigation'
-import { ElementRef, useRef, useState, useEffect } from 'react'
-import { useMediaQuery } from 'usehooks-ts'
+import { mutate } from 'swr'
 import { toast } from 'sonner'
-import DocumentList from './document-list'
+import { useMediaQuery } from 'usehooks-ts'
+import { ElementRef, useRef, useState, useEffect } from 'react'
+import { useParams, usePathname, useRouter } from 'next/navigation'
+
+import { cn } from '@/lib/utils'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import TrashBox from './trash-box'
+import { create } from '@/api/document'
 import { useSearch } from '@/stores/use-search'
 import { useSettings } from '@/stores/use-settings'
-import Navbar from './navbar'
+
 import Item from './item'
+import Navbar from './navbar'
+import TrashBox from './trash-box'
 import UserItem from './user-item'
-import { create } from '@/api/document'
-import { mutate } from 'swr'
+import DocumentList from './document-list'
 import InboxContent from './inbox-content'
 
 const Navigation = () => {
@@ -56,6 +58,7 @@ const Navigation = () => {
       collapse()
     }
   }, [pathname, isMobile])
+
   // 鼠标按下添加事件监听器
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -98,7 +101,7 @@ const Navigation = () => {
       sidebarRef.current.style.width = isMobile ? '100%' : '240px'
       navbarRef.current.style.setProperty(
         'width',
-        isMobile ? '0' : 'calc(100%-240px)'
+        isMobile ? '0' : 'calc(100% - 240px)'
       )
       navbarRef.current.style.setProperty('left', isMobile ? '100%' : '240px')
 
@@ -214,11 +217,11 @@ const Navigation = () => {
           className="absolute right-0 top-0 h-full w-1 cursor-ew-resize bg-primary/10 opacity-0 transition group-hover/sidebar:opacity-100"
         />
       </aside>
-      {/* 主栏的导航部分 */}
+      {/* 顶部导航 */}
       <div
         ref={navbarRef}
         className={cn(
-          'absolute left-60 top-0 z-[99999] w-[calc(100%-240px)]',
+          'w-[calc(100% - 240px)] absolute left-60 top-0 z-[99999]',
           isResetting && 'transition-all duration-300 ease-in-out',
           isMobile && 'left-0 w-full'
         )}>

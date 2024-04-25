@@ -1,15 +1,18 @@
 'use client'
 
-import { create } from '@/api/invitation'
+import { toast } from 'sonner'
+import { FormEvent, useState } from 'react'
+
 import { Button } from '@/components/ui/button'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+
+import { create } from '@/api/invitation'
 import { useSession } from '@/hooks/use-session'
-import { FormEvent, useState } from 'react'
-import { toast } from 'sonner'
+
 import { UserBoard } from './user-board'
 
 interface InviteProps {

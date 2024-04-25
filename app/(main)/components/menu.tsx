@@ -1,7 +1,9 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+import { MoreHorizontal, Trash } from 'lucide-react'
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +12,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { MoreHorizontal, Trash } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
+
 import { archive } from '@/api/document'
 import { useSession } from '@/hooks/use-session'
 

@@ -1,10 +1,11 @@
-import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core'
 import {
   DefaultReactSuggestionItem,
   getDefaultReactSlashMenuItems,
 } from '@blocknote/react'
-import { fencedCodeBlock, insertFencedCodeBlock } from './fenced-code'
+import { BlockNoteSchema, defaultBlockSpecs } from '@blocknote/core'
+
 import { BlockQuoteBlock, insertBlockQuote } from './quote'
+import { fencedCodeBlock, insertFencedCodeBlock } from './fenced-code'
 
 const blockSchema = BlockNoteSchema.create({
   blockSpecs: {

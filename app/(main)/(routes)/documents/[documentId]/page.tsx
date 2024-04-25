@@ -1,14 +1,15 @@
 'use client'
 
-import { Doc, getById, update } from '@/api/document'
+import { debounce } from 'lodash'
+import { useEffect, useState } from 'react'
+
 import Cover from '@/components/cover'
 import Toolbar from '@/components/toolbar'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useDocument } from '@/stores/use-document'
-import { useEffect, useState } from 'react'
-import { debounce } from 'lodash'
+import { EditorWrapper } from '@/components/editor/editor-wrapper'
 
-import { EditorWrapper } from '@/components/editor-wrapper'
+import { useDocument } from '@/stores/use-document'
+import { Doc, getById, update } from '@/api/document'
 
 interface DocumentIdPageProps {
   params: {

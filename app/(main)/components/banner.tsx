@@ -1,10 +1,11 @@
 'use client'
 
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+
 import { remove, restore } from '@/api/document'
 import ConfirmModal from '@/components/modals/confirm-modal'
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
 
 interface BannerProps {
   documentId: string
@@ -17,7 +18,7 @@ const Banner = ({ documentId }: BannerProps) => {
     try {
       toast.loading('Deleting note...')
 
-      const response = await remove(documentId)
+      await remove(documentId)
 
       toast.success('Note deleted!')
 
@@ -30,7 +31,7 @@ const Banner = ({ documentId }: BannerProps) => {
     try {
       toast.loading('Restoring note...')
 
-      const response = await restore(documentId)
+      await restore(documentId)
 
       toast.success('Note restored!')
     } catch (error) {

@@ -1,10 +1,11 @@
 'use client'
 
-import { getUserInfo, githubLogin } from '@/api/user'
-import { useLocalStorage } from 'usehooks-ts'
 import { toast } from 'sonner'
 import { useEffect, useState } from 'react'
+import { useLocalStorage } from 'usehooks-ts'
 import { redirect } from 'next/navigation'
+
+import { getUserInfo, githubLogin } from '@/api/user'
 
 interface User {
   _id: string

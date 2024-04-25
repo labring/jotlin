@@ -1,14 +1,15 @@
 'use client'
 
-import { useCoverImage } from '@/stores/use-cover-image'
-import { Dialog, DialogContent, DialogHeader } from '../ui/dialog'
 import { useState } from 'react'
 import { useParams } from 'next/navigation'
+
 import { SingleImageDropzone } from '../single-image-dropzone'
-import { update } from '@/api/document'
+import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
+
 import { upload } from '@/api/image'
-import { mutate } from 'swr'
+import { update } from '@/api/document'
 import { useDocument } from '@/stores/use-document'
+import { useCoverImage } from '@/stores/use-cover-image'
 
 const CoverImageModal = () => {
   const params = useParams()

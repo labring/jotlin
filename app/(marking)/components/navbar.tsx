@@ -1,21 +1,24 @@
 'use client'
 
-import Logo from './logo'
-import { cn } from '@/lib/utils'
-import { useScrollTop } from '@/hooks/use-scroll-top'
-import { Button } from '@/components/ui/button'
-import { ModeToggle } from '@/components/mode-toggle'
-import { Spinner } from '@/components/spinner'
 import Link from 'next/link'
-import { useAuth } from '@/stores/use-auth'
+import { ArrowRightFromLine, Settings } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/spinner'
+import { ModeToggle } from '@/components/mode-toggle'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
-import { useSession } from '@/hooks/use-session'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { ArrowRightFromLine, Settings } from 'lucide-react'
+
+import { cn } from '@/lib/utils'
+import { useAuth } from '@/stores/use-auth'
+import { useSession } from '@/hooks/use-session'
+import { useScrollTop } from '@/hooks/use-scroll-top'
+
+import Logo from './logo'
 
 const Navbar = () => {
   const { isAuthenticated, isLoading, user, signOut } = useSession()

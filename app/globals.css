@@ -91,7 +91,7 @@ body,
   text-decoration: underline;
 }
 
-/* override blokckquote style */
+/* override blockquote style */
 .bn-editor blockquote {
   position: relative;
   padding-left: 20px;

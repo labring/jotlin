@@ -1,5 +1,5 @@
-import { createReactBlockSpec } from '@blocknote/react'
 import { TbCode } from 'react-icons/tb'
+import { createReactBlockSpec } from '@blocknote/react'
 import {
   Select,
   SelectContent,
