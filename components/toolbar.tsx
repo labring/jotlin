@@ -38,7 +38,6 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
       _id: initialData._id,
       title: value || 'Untitled',
     })
-    // FIXME: how to show data directly in the UI when we didn't fetch it.
     const newDocument = response.data
     onSetDocument(newDocument)
   }
@@ -122,7 +121,7 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
         <div
           onClick={enableInput}
           className="break-words pb-[11.5px] text-5xl font-bold text-[#3F3F3F] outline-none dark:text-[#CFCFCF]">
-          {initialData.title}
+          {value}
         </div>
       )}
     </div>
