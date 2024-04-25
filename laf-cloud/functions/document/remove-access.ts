@@ -4,18 +4,8 @@ import { ObjectId } from 'mongodb'
 
 export default async function (ctx: FunctionContext) {
   const { documentId, collaboratorEmail } = ctx.body
-  const userId = ctx.user.uid
-  const objectUserId = new ObjectId(userId)
-
-  // find user email
-  const user = await db.collection('users').findOne({
-    _id: objectUserId,
-  })
-
-  const userEmailAddress = user.emailAddress
 
   const existingInvitation = await db.collection('invitations').findOne({
-    userEmail: userEmailAddress,
     collaboratorEmail,
     isAccepted: true,
     documentId,
@@ -82,7 +72,6 @@ export default async function (ctx: FunctionContext) {
 
   const deleteInvitationNotice = await db.collection('invitations').updateOne(
     {
-      userEmail: userEmailAddress,
       collaboratorEmail,
       isAccepted: true,
       documentId,

@@ -9,6 +9,7 @@
     "cmdk",
     "codecup",
     "editorjs",
+    "fastnote",
     "hljs",
     "jotlin",
     "lafjs",
@@ -28,7 +29,5 @@
     "ydoc",
     "zustand"
   ],
-  "typescript.tsdk": "node_modules\\typescript\\lib",
-  "Codegeex.SidebarUI.LanguagePreference": "中文",
-  "Codegeex.CompletionModel": "CodeGeeX Pro[Beta]"
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

@@ -23,7 +23,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 import { cn } from '@/lib/utils'
 import { useSession } from '@/hooks/use-session'
-import { archive, create } from '@/api/document'
+import { archive, create, removeAccess } from '@/api/document'
 
 interface ItemProps {
   id?: string
@@ -36,6 +36,7 @@ interface ItemProps {
   label: string
   onClick?: () => void
   icon: LucideIcon
+  type?: 'private' | 'share'
 }
 
 const Item = ({
@@ -49,9 +50,10 @@ const Item = ({
   level = 0,
   onClick,
   icon: Icon,
+  type,
 }: ItemProps) => {
-  const { user } = useSession()
   const router = useRouter()
+  const { user } = useSession()
 
   const onArchive = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -60,7 +62,8 @@ const Item = ({
     if (!id) return
     try {
       toast.loading('Moving to trash...')
-      await archive(id).then(() => router.push('/documents'))
+      await archive(id)
+      router.push('/documents')
       toast.success('Note moved to trash!')
       mutate(
         (key) =>
@@ -69,6 +72,24 @@ const Item = ({
     } catch (error) {
       toast.error('Failed to archive note.')
     }
+  }
+
+  const onQuitDocument = () => {
+    if (!id) return
+    const promise = removeAccess(id, user!.emailAddress).then((res) => {
+      console.log(res)
+      mutate(
+        (key) =>
+          typeof key === 'string' && key.startsWith('/api/document/get-by-id')
+      )
+      router.push('/documents')
+    })
+
+    toast.promise(promise, {
+      loading: 'quit...',
+      success: 'You quit this document',
+      error: 'Failed to quit it.',
+    })
   }
 
   //切换展开状态
@@ -154,9 +175,10 @@ const Item = ({
               align="start"
               side="right"
               forceMount>
-              <DropdownMenuItem onClick={onArchive}>
+              <DropdownMenuItem
+                onClick={type === 'private' ? onArchive : onQuitDocument}>
                 <Trash className="mr-2 h-4 w-4" />
-                Delete
+                {type === 'private' ? 'Delete' : 'Quit'}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <div className="p-2 text-xs text-muted-foreground">
