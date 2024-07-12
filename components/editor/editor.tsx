@@ -66,15 +66,16 @@ const Editor = ({
   useEffect(() => {
     const handlePaste = (event: ClipboardEvent) => {
       const items = event.clipboardData ? event.clipboardData.items : []
-
       const item = items[items.length - 1]
       const currentBlock = editor.getTextCursorPosition().block
 
-      if (item.kind === 'string') {
+      // markhtml will be parsed to blocks, so we only handle text/plain
+      if (item.kind === 'string' && item.type === 'text/plain') {
         item.getAsString(async (markdown) => {
-          console.log(markdown)
-          const markdownHtml = await marked.parse(markdown, { breaks: true })
-          console.log(markdownHtml)
+          const markdownHtml = await marked.parse(
+            markdown.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, ''),
+            { breaks: true, async: true }
+          )
           const cleanedHtml = DOMPurify.sanitize(markdownHtml)
           const blocksFromHTML = await editor.tryParseHTMLToBlocks(cleanedHtml)
           editor.replaceBlocks([currentBlock], blocksFromHTML)
