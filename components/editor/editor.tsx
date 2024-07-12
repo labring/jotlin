@@ -1,6 +1,7 @@
 'use client'
 
 import * as Y from 'yjs'
+import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useTheme } from 'next-themes'
 import { locales } from '@blocknote/core'
@@ -61,12 +62,9 @@ const Editor = ({
         : undefined,
   })
 
-  // FIXME: 粘贴大量markdown文本时会出现粘贴两次的情况
-  // monitor clipboard,when last paste item is image,update currentBlock;
-  // when last paste item is md-text,insert after currentBlock.
+  // monitor clipboard,when last paste item is md-text,insert after currentBlock.
   useEffect(() => {
     const handlePaste = (event: ClipboardEvent) => {
-      event.preventDefault()
       const items = event.clipboardData ? event.clipboardData.items : []
 
       const item = items[items.length - 1]
@@ -77,8 +75,8 @@ const Editor = ({
           console.log(markdown)
           const markdownHtml = await marked.parse(markdown, { breaks: true })
           console.log(markdownHtml)
-
-          const blocksFromHTML = await editor.tryParseHTMLToBlocks(markdownHtml)
+          const cleanedHtml = DOMPurify.sanitize(markdownHtml)
+          const blocksFromHTML = await editor.tryParseHTMLToBlocks(cleanedHtml)
           editor.replaceBlocks([currentBlock], blocksFromHTML)
         })
       }
